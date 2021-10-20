@@ -34,6 +34,6 @@ from meltingpot.python.configs.substrates import collaborative_cooking as base_c
 
 
 def get_config():
-  """Default config for training on collaborative cooking."""
-  config = base_config.get_config("impassable")
-  return config
+    """Default config for training on collaborative cooking."""
+    config = base_config.get_config("impassable")
+    return config

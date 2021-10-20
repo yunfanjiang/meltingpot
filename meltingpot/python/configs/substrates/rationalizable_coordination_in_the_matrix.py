@@ -107,40 +107,31 @@ WALL = {
             "component": "StateManager",
             "kwargs": {
                 "initialState": "wall",
-                "stateConfigs": [{
-                    "state": "wall",
-                    "layer": "upperPhysical",
-                    "sprite": "Wall",
-                }],
-            }
+                "stateConfigs": [
+                    {"state": "wall", "layer": "upperPhysical", "sprite": "Wall",}
+                ],
+            },
         },
-        {
-            "component": "Transform",
-            "kwargs": {
-                "position": (0, 0),
-                "orientation": "N"
-            }
-        },
+        {"component": "Transform", "kwargs": {"position": (0, 0), "orientation": "N"}},
         {
             "component": "Appearance",
             "kwargs": {
                 "renderMode": "ascii_shape",
                 "spriteNames": ["Wall"],
                 "spriteShapes": [shapes.WALL],
-                "palettes": [{"*": (95, 95, 95, 255),
-                              "&": (100, 100, 100, 255),
-                              "@": (109, 109, 109, 255),
-                              "#": (152, 152, 152, 255)}],
-                "noRotates": [False]
-            }
+                "palettes": [
+                    {
+                        "*": (95, 95, 95, 255),
+                        "&": (100, 100, 100, 255),
+                        "@": (109, 109, 109, 255),
+                        "#": (152, 152, 152, 255),
+                    }
+                ],
+                "noRotates": [False],
+            },
         },
-        {
-            "component": "BeamBlocker",
-            "kwargs": {
-                "beamType": "gameInteraction"
-            }
-        },
-    ]
+        {"component": "BeamBlocker", "kwargs": {"beamType": "gameInteraction"}},
+    ],
 }
 
 SPAWN_POINT = {
@@ -150,21 +141,17 @@ SPAWN_POINT = {
             "component": "StateManager",
             "kwargs": {
                 "initialState": "spawnPoint",
-                "stateConfigs": [{
-                    "state": "spawnPoint",
-                    "layer": "alternateLogic",
-                    "groups": ["spawnPoints"]
-                }],
-            }
+                "stateConfigs": [
+                    {
+                        "state": "spawnPoint",
+                        "layer": "alternateLogic",
+                        "groups": ["spawnPoints"],
+                    }
+                ],
+            },
         },
-        {
-            "component": "Transform",
-            "kwargs": {
-                "position": (0, 0),
-                "orientation": "N"
-            }
-        },
-    ]
+        {"component": "Transform", "kwargs": {"position": (0, 0), "orientation": "N"}},
+    ],
 }
 
 # PLAYER_COLOR_PALETTES is a list with each entry specifying the color to use
@@ -172,19 +159,19 @@ SPAWN_POINT = {
 NUM_PLAYERS_UPPER_BOUND = 32
 PLAYER_COLOR_PALETTES = []
 for idx in range(NUM_PLAYERS_UPPER_BOUND):
-  PLAYER_COLOR_PALETTES.append(shapes.get_palette(colors.palette[idx]))
+    PLAYER_COLOR_PALETTES.append(shapes.get_palette(colors.palette[idx]))
 
 # Primitive action components.
 # pylint: disable=bad-whitespace
 # pyformat: disable
-NOOP       = {"move": 0, "turn":  0, "interact": 0}
-FORWARD    = {"move": 1, "turn":  0, "interact": 0}
-STEP_RIGHT = {"move": 2, "turn":  0, "interact": 0}
-BACKWARD   = {"move": 3, "turn":  0, "interact": 0}
-STEP_LEFT  = {"move": 4, "turn":  0, "interact": 0}
-TURN_LEFT  = {"move": 0, "turn": -1, "interact": 0}
-TURN_RIGHT = {"move": 0, "turn":  1, "interact": 0}
-INTERACT   = {"move": 0, "turn":  0, "interact": 1}
+NOOP = {"move": 0, "turn": 0, "interact": 0}
+FORWARD = {"move": 1, "turn": 0, "interact": 0}
+STEP_RIGHT = {"move": 2, "turn": 0, "interact": 0}
+BACKWARD = {"move": 3, "turn": 0, "interact": 0}
+STEP_LEFT = {"move": 4, "turn": 0, "interact": 0}
+TURN_LEFT = {"move": 0, "turn": -1, "interact": 0}
+TURN_RIGHT = {"move": 0, "turn": 1, "interact": 0}
+INTERACT = {"move": 0, "turn": 0, "interact": 1}
 # pyformat: enable
 # pylint: enable=bad-whitespace
 
@@ -215,374 +202,365 @@ TARGET_SPRITE_OTHER = {
 
 
 def create_scene():
-  """Creates the global scene."""
-  scene = {
-      "name": "scene",
-      "components": [
-          {
-              "component": "StateManager",
-              "kwargs": {
-                  "initialState": "scene",
-                  "stateConfigs": [{
-                      "state": "scene",
-                  }],
-              }
-          },
-          {
-              "component": "Transform",
-              "kwargs": {
-                  "position": (0, 0),
-                  "orientation": "N"
-              },
-          },
-          {
-              "component": "TheMatrix",
-              "kwargs": {
-                  "zero_initial_inventory": True,
-                  "matrix": [
-                      # 1  2  3
-                      [1, 0, 0],  # 1
-                      [0, 2, 0],  # 2
-                      [0, 0, 3]   # 3
-                  ],
-              }
-          },
-      ]
-  }
-  return scene
+    """Creates the global scene."""
+    scene = {
+        "name": "scene",
+        "components": [
+            {
+                "component": "StateManager",
+                "kwargs": {
+                    "initialState": "scene",
+                    "stateConfigs": [{"state": "scene",}],
+                },
+            },
+            {
+                "component": "Transform",
+                "kwargs": {"position": (0, 0), "orientation": "N"},
+            },
+            {
+                "component": "TheMatrix",
+                "kwargs": {
+                    "zero_initial_inventory": True,
+                    "matrix": [
+                        # 1  2  3
+                        [1, 0, 0],  # 1
+                        [0, 2, 0],  # 2
+                        [0, 0, 3],  # 3
+                    ],
+                },
+            },
+        ],
+    }
+    return scene
 
 
 def create_resource_prefab(resource_id, color_data):
-  """Creates resource prefab with provided `resource_id` (num) and color."""
-  resource_name = "resource_class{}".format(resource_id)
-  resource_prefab = {
-      "name": resource_name,
-      "components": [
-          {
-              "component": "StateManager",
-              "kwargs": {
-                  "initialState": resource_name,
-                  "stateConfigs": [
-                      {"state": resource_name + "_wait",
-                       "groups": ["resourceWaits"]},
-                      {"state": resource_name,
-                       "layer": "lowerPhysical",
-                       "sprite": resource_name + "_sprite"},
-                  ]
-              },
-          },
-          {
-              "component": "Transform",
-              "kwargs": {
-                  "position": (0, 0),
-                  "orientation": "N"
-              },
-          },
-          {
-              "component": "Appearance",
-              "kwargs": {
-                  "renderMode": "ascii_shape",
-                  "spriteNames": [resource_name + "_sprite"],
-                  "spriteShapes": [shapes.BUTTON],
-                  "palettes": [{"*": color_data[0],
-                                "#": color_data[1],
-                                "x": (0, 0, 0, 0)}],
-                  "noRotates": [False]
-              },
-          },
-          {
-              "component": "Resource",
-              "kwargs": {
-                  "resourceClass": resource_id,
-                  "visibleType": resource_name,
-                  "waitState": resource_name + "_wait",
-                  "groupToRespawn": "resourceWaits",
-                  "regenerationRate": 0.005,
-                  "regenerationDelay": 50
-              },
-          },
-          {
-              "component": "Destroyable",
-              "kwargs": {
-                  "visibleType": resource_name,
-                  "waitState": resource_name + "_wait",
-                  "initialHealth": 1,
-              },
-          },
-      ]
-  }
-  return resource_prefab
+    """Creates resource prefab with provided `resource_id` (num) and color."""
+    resource_name = "resource_class{}".format(resource_id)
+    resource_prefab = {
+        "name": resource_name,
+        "components": [
+            {
+                "component": "StateManager",
+                "kwargs": {
+                    "initialState": resource_name,
+                    "stateConfigs": [
+                        {"state": resource_name + "_wait", "groups": ["resourceWaits"]},
+                        {
+                            "state": resource_name,
+                            "layer": "lowerPhysical",
+                            "sprite": resource_name + "_sprite",
+                        },
+                    ],
+                },
+            },
+            {
+                "component": "Transform",
+                "kwargs": {"position": (0, 0), "orientation": "N"},
+            },
+            {
+                "component": "Appearance",
+                "kwargs": {
+                    "renderMode": "ascii_shape",
+                    "spriteNames": [resource_name + "_sprite"],
+                    "spriteShapes": [shapes.BUTTON],
+                    "palettes": [
+                        {"*": color_data[0], "#": color_data[1], "x": (0, 0, 0, 0)}
+                    ],
+                    "noRotates": [False],
+                },
+            },
+            {
+                "component": "Resource",
+                "kwargs": {
+                    "resourceClass": resource_id,
+                    "visibleType": resource_name,
+                    "waitState": resource_name + "_wait",
+                    "groupToRespawn": "resourceWaits",
+                    "regenerationRate": 0.005,
+                    "regenerationDelay": 50,
+                },
+            },
+            {
+                "component": "Destroyable",
+                "kwargs": {
+                    "visibleType": resource_name,
+                    "waitState": resource_name + "_wait",
+                    "initialHealth": 1,
+                },
+            },
+        ],
+    }
+    return resource_prefab
 
 
 def create_prefabs() -> PrefabConfig:
-  """Returns the prefabs.
+    """Returns the prefabs.
 
   Prefabs are a dictionary mapping names to template game objects that can
   be cloned and placed in multiple locations accoring to an ascii map.
   """
-  prefabs = {
-      "wall": WALL,
-      "spawn_point": SPAWN_POINT,
-  }
-  prefabs["resource_class1"] = create_resource_prefab(1, RESOURCE1_COLOR_DATA)
-  prefabs["resource_class2"] = create_resource_prefab(2, RESOURCE2_COLOR_DATA)
-  prefabs["resource_class3"] = create_resource_prefab(3, RESOURCE3_COLOR_DATA)
-  return prefabs
+    prefabs = {
+        "wall": WALL,
+        "spawn_point": SPAWN_POINT,
+    }
+    prefabs["resource_class1"] = create_resource_prefab(1, RESOURCE1_COLOR_DATA)
+    prefabs["resource_class2"] = create_resource_prefab(2, RESOURCE2_COLOR_DATA)
+    prefabs["resource_class3"] = create_resource_prefab(3, RESOURCE3_COLOR_DATA)
+    return prefabs
 
 
-def create_avatar_object(player_idx: int,
-                         all_source_sprite_names: List[str],
-                         target_sprite_self: Dict[str, Any],
-                         target_sprite_other: Dict[str, Any]) -> Dict[str, Any]:
-  """Create an avatar object given self vs other sprite data."""
-  # Lua is 1-indexed.
-  lua_index = player_idx + 1
+def create_avatar_object(
+    player_idx: int,
+    all_source_sprite_names: List[str],
+    target_sprite_self: Dict[str, Any],
+    target_sprite_other: Dict[str, Any],
+) -> Dict[str, Any]:
+    """Create an avatar object given self vs other sprite data."""
+    # Lua is 1-indexed.
+    lua_index = player_idx + 1
 
-  # Setup the self vs other sprite mapping.
-  source_sprite_self = "Avatar" + str(lua_index)
-  custom_sprite_map = {source_sprite_self: target_sprite_self["name"]}
-  for name in all_source_sprite_names:
-    if name != source_sprite_self:
-      custom_sprite_map[name] = target_sprite_other["name"]
+    # Setup the self vs other sprite mapping.
+    source_sprite_self = "Avatar" + str(lua_index)
+    custom_sprite_map = {source_sprite_self: target_sprite_self["name"]}
+    for name in all_source_sprite_names:
+        if name != source_sprite_self:
+            custom_sprite_map[name] = target_sprite_other["name"]
 
-  live_state_name = "player{}".format(lua_index)
-  avatar_object = {
-      "name": "avatar",
-      "components": [
-          {
-              "component": "StateManager",
-              "kwargs": {
-                  "initialState": live_state_name,
-                  "stateConfigs": [
-                      {"state": live_state_name,
-                       "layer": "upperPhysical",
-                       "sprite": source_sprite_self,
-                       "contact": "avatar",
-                       "groups": ["players"]},
+    live_state_name = "player{}".format(lua_index)
+    avatar_object = {
+        "name": "avatar",
+        "components": [
+            {
+                "component": "StateManager",
+                "kwargs": {
+                    "initialState": live_state_name,
+                    "stateConfigs": [
+                        {
+                            "state": live_state_name,
+                            "layer": "upperPhysical",
+                            "sprite": source_sprite_self,
+                            "contact": "avatar",
+                            "groups": ["players"],
+                        },
+                        {"state": "playerWait", "groups": ["playerWaits"]},
+                    ],
+                },
+            },
+            {
+                "component": "Transform",
+                "kwargs": {"position": (0, 0), "orientation": "N"},
+            },
+            {
+                "component": "Appearance",
+                "kwargs": {
+                    "renderMode": "colored_square",
+                    "spriteNames": [source_sprite_self],
+                    # A white square should never be displayed. It will always be
+                    # remapped since this is self vs other observation mode.
+                    "spriteRGBColors": [(255, 255, 255, 255)],
+                },
+            },
+            {
+                "component": "AdditionalSprites",
+                "kwargs": {
+                    "renderMode": "ascii_shape",
+                    "customSpriteNames": [
+                        target_sprite_self["name"],
+                        target_sprite_other["name"],
+                    ],
+                    "customSpriteShapes": [
+                        target_sprite_self["shape"],
+                        target_sprite_other["shape"],
+                    ],
+                    "customPalettes": [
+                        target_sprite_self["palette"],
+                        target_sprite_other["palette"],
+                    ],
+                    "customNoRotates": [
+                        target_sprite_self["noRotate"],
+                        target_sprite_other["noRotate"],
+                    ],
+                },
+            },
+            {
+                "component": "Avatar",
+                "kwargs": {
+                    "index": lua_index,
+                    "aliveState": live_state_name,
+                    "waitState": "playerWait",
+                    "speed": 1.0,
+                    "spawnGroup": "spawnPoints",
+                    "actionOrder": ["move", "turn", "interact"],
+                    "actionSpec": {
+                        "move": {"default": 0, "min": 0, "max": len(_COMPASS)},
+                        "turn": {"default": 0, "min": -1, "max": 1},
+                        "interact": {"default": 0, "min": 0, "max": 1},
+                    },
+                    "view": {
+                        "left": 5,
+                        "right": 5,
+                        "forward": 9,
+                        "backward": 1,
+                        "centered": False,
+                    },
+                    "spriteMap": custom_sprite_map,
+                    # The following kwarg makes it possible to get rewarded even
+                    # on frames when an avatar is "dead". It is needed for in the
+                    # matrix games in order to correctly handle the case of two
+                    # players getting hit simultaneously by the same beam.
+                    "skipWaitStateRewards": False,
+                },
+            },
+            {
+                "component": "GameInteractionZapper",
+                "kwargs": {
+                    "cooldownTime": 32,
+                    "beamLength": 3,
+                    "beamRadius": 1,
+                    "framesTillRespawn": 200,
+                    "numResources": NUM_RESOURCES,
+                    "reset_winner_inventory": True,
+                    "reset_loser_inventory": True,
+                    "losingPlayerDies": True,
+                    "winningPlayerDies": True,
+                },
+            },
+            {
+                "component": "ReadyToShootObservation",
+                "kwargs": {"zapperComponent": "GameInteractionZapper",},
+            },
+            {"component": "InventoryObserver", "kwargs": {}},
+            {
+                "component": "Taste",
+                "kwargs": {
+                    "mostTastyResourceClass": -1,  # -1 indicates no preference.
+                },
+            },
+            {
+                "component": "InteractionTaste",
+                "kwargs": {
+                    "mostTastyResourceClass": -1,  # -1 indicates no preference.
+                    "zeroDefaultInteractionReward": True,
+                    "extraReward": 1.0,
+                },
+            },
+            {
+                "component": "LocationObserver",
+                "kwargs": {"objectIsAvatar": True, "alsoReportOrientation": True},
+            },
+            {
+                "component": "AvatarMetricReporter",
+                "kwargs": {
+                    "metrics": [
+                        {
+                            # Report the inventories of both players involved in
+                            # an interaction on this frame formatted as
+                            # (self inventory, partner inventory).
+                            "name": "INTERACTION_INVENTORIES",
+                            "type": "tensor.DoubleTensor",
+                            "shape": (2, NUM_RESOURCES),
+                            "component": "GameInteractionZapper",
+                            "variable": "latest_interaction_inventories",
+                        },
+                    ]
+                },
+            },
+        ],
+    }
 
-                      {"state": "playerWait",
-                       "groups": ["playerWaits"]},
-                  ]
-              }
-          },
-          {
-              "component": "Transform",
-              "kwargs": {
-                  "position": (0, 0),
-                  "orientation": "N"
-              }
-          },
-          {
-              "component": "Appearance",
-              "kwargs": {
-                  "renderMode": "colored_square",
-                  "spriteNames": [source_sprite_self],
-                  # A white square should never be displayed. It will always be
-                  # remapped since this is self vs other observation mode.
-                  "spriteRGBColors": [(255, 255, 255, 255)],
-              }
-          },
-          {
-              "component": "AdditionalSprites",
-              "kwargs": {
-                  "renderMode": "ascii_shape",
-                  "customSpriteNames": [target_sprite_self["name"],
-                                        target_sprite_other["name"]],
-                  "customSpriteShapes": [target_sprite_self["shape"],
-                                         target_sprite_other["shape"]],
-                  "customPalettes": [target_sprite_self["palette"],
-                                     target_sprite_other["palette"]],
-                  "customNoRotates": [target_sprite_self["noRotate"],
-                                      target_sprite_other["noRotate"]],
-              }
-          },
-          {
-              "component": "Avatar",
-              "kwargs": {
-                  "index": lua_index,
-                  "aliveState": live_state_name,
-                  "waitState": "playerWait",
-                  "speed": 1.0,
-                  "spawnGroup": "spawnPoints",
-                  "actionOrder": ["move", "turn", "interact"],
-                  "actionSpec": {
-                      "move": {"default": 0, "min": 0, "max": len(_COMPASS)},
-                      "turn": {"default": 0, "min": -1, "max": 1},
-                      "interact": {"default": 0, "min": 0, "max": 1},
-                  },
-                  "view": {
-                      "left": 5,
-                      "right": 5,
-                      "forward": 9,
-                      "backward": 1,
-                      "centered": False
-                  },
-                  "spriteMap": custom_sprite_map,
-                  # The following kwarg makes it possible to get rewarded even
-                  # on frames when an avatar is "dead". It is needed for in the
-                  # matrix games in order to correctly handle the case of two
-                  # players getting hit simultaneously by the same beam.
-                  "skipWaitStateRewards": False,
-              }
-          },
-          {
-              "component": "GameInteractionZapper",
-              "kwargs": {
-                  "cooldownTime": 32,
-                  "beamLength": 3,
-                  "beamRadius": 1,
-                  "framesTillRespawn": 200,
-                  "numResources": NUM_RESOURCES,
-                  "reset_winner_inventory": True,
-                  "reset_loser_inventory": True,
-                  "losingPlayerDies": True,
-                  "winningPlayerDies": True,
-              }
-          },
-          {
-              "component": "ReadyToShootObservation",
-              "kwargs": {
-                  "zapperComponent": "GameInteractionZapper",
-              }
-          },
-          {
-              "component": "InventoryObserver",
-              "kwargs": {
-              }
-          },
-          {
-              "component": "Taste",
-              "kwargs": {
-                  "mostTastyResourceClass": -1,  # -1 indicates no preference.
-              }
-          },
-          {
-              "component": "InteractionTaste",
-              "kwargs": {
-                  "mostTastyResourceClass": -1,  # -1 indicates no preference.
-                  "zeroDefaultInteractionReward": True,
-                  "extraReward": 1.0,
-              }
-          },
-          {
-              "component": "LocationObserver",
-              "kwargs": {
-                  "objectIsAvatar": True,
-                  "alsoReportOrientation": True
-              }
-          },
-          {
-              "component": "AvatarMetricReporter",
-              "kwargs": {
-                  "metrics": [
-                      {
-                          # Report the inventories of both players involved in
-                          # an interaction on this frame formatted as
-                          # (self inventory, partner inventory).
-                          "name": "INTERACTION_INVENTORIES",
-                          "type": "tensor.DoubleTensor",
-                          "shape": (2, NUM_RESOURCES),
-                          "component": "GameInteractionZapper",
-                          "variable": "latest_interaction_inventories",
-                      },
-                  ]
-              }
-          },
-      ]
-  }
-
-  return avatar_object
+    return avatar_object
 
 
 def get_all_source_sprite_names(num_players):
-  all_source_sprite_names = []
-  for player_idx in range(0, num_players):
-    # Lua is 1-indexed.
-    lua_index = player_idx + 1
-    all_source_sprite_names.append("Avatar" + str(lua_index))
+    all_source_sprite_names = []
+    for player_idx in range(0, num_players):
+        # Lua is 1-indexed.
+        lua_index = player_idx + 1
+        all_source_sprite_names.append("Avatar" + str(lua_index))
 
-  return all_source_sprite_names
+    return all_source_sprite_names
 
 
 def create_avatar_objects(num_players):
-  """Returns list of avatar objects of length 'num_players'."""
-  all_source_sprite_names = get_all_source_sprite_names(num_players)
-  avatar_objects = []
-  for player_idx in range(0, num_players):
-    game_object = create_avatar_object(player_idx,
-                                       all_source_sprite_names,
-                                       TARGET_SPRITE_SELF,
-                                       TARGET_SPRITE_OTHER)
-    avatar_objects.append(game_object)
+    """Returns list of avatar objects of length 'num_players'."""
+    all_source_sprite_names = get_all_source_sprite_names(num_players)
+    avatar_objects = []
+    for player_idx in range(0, num_players):
+        game_object = create_avatar_object(
+            player_idx, all_source_sprite_names, TARGET_SPRITE_SELF, TARGET_SPRITE_OTHER
+        )
+        avatar_objects.append(game_object)
 
-  return avatar_objects
+    return avatar_objects
 
 
 def create_world_sprite_map(
-    num_players: int, target_sprite_other: Dict[str, Any]) -> Dict[str, str]:
-  all_source_sprite_names = get_all_source_sprite_names(num_players)
-  world_sprite_map = {}
-  for name in all_source_sprite_names:
-    world_sprite_map[name] = target_sprite_other["name"]
+    num_players: int, target_sprite_other: Dict[str, Any]
+) -> Dict[str, str]:
+    all_source_sprite_names = get_all_source_sprite_names(num_players)
+    world_sprite_map = {}
+    for name in all_source_sprite_names:
+        world_sprite_map[name] = target_sprite_other["name"]
 
-  return world_sprite_map
+    return world_sprite_map
 
 
 def create_lab2d_settings(
     num_players: int,
     ascii_map_string: str,
-    settings_overrides: Iterable[Tuple[str, Any]] = ()) -> Dict[str, Any]:
-  """Returns the lab2d settings.
+    settings_overrides: Iterable[Tuple[str, Any]] = (),
+) -> Dict[str, Any]:
+    """Returns the lab2d settings.
 
   Args:
     num_players: (int) the number of players.
     ascii_map_string: ascii map.
     settings_overrides: (key, value) overrides for default settings.
   """
-  settings = {
-      "levelName": "the_matrix",
-      "levelDirectory": "meltingpot/lua/levels",
-      "numPlayers": num_players,
-      "episodeLengthFrames": 1000,
-      "spriteSize": 8,
-      "simulation": {
-          "map": ascii_map_string,
-          "gameObjects": create_avatar_objects(num_players=num_players),
-          "scene": copy.deepcopy(create_scene()),
-          "prefabs": create_prefabs(),
-          "charPrefabMap": CHAR_PREFAB_MAP,
-          # worldSpriteMap is needed to make the global view used in videos be
-          # be informative in cases where individual avatar views have had
-          # sprites remapped to one another (example: self vs other mode).
-          "worldSpriteMap": create_world_sprite_map(num_players,
-                                                    TARGET_SPRITE_OTHER),
-      }
-  }
-  settings.update(settings_overrides)
-  return settings
+    settings = {
+        "levelName": "the_matrix",
+        "levelDirectory": "meltingpot/lua/levels",
+        "numPlayers": num_players,
+        "episodeLengthFrames": 1000,
+        "spriteSize": 8,
+        "simulation": {
+            "map": ascii_map_string,
+            "gameObjects": create_avatar_objects(num_players=num_players),
+            "scene": copy.deepcopy(create_scene()),
+            "prefabs": create_prefabs(),
+            "charPrefabMap": CHAR_PREFAB_MAP,
+            # worldSpriteMap is needed to make the global view used in videos be
+            # be informative in cases where individual avatar views have had
+            # sprites remapped to one another (example: self vs other mode).
+            "worldSpriteMap": create_world_sprite_map(num_players, TARGET_SPRITE_OTHER),
+        },
+    }
+    settings.update(settings_overrides)
+    return settings
 
 
 def get_config(factory=create_lab2d_settings):
-  """Default config for rationalizable coordination in the matrix."""
-  config = config_dict.ConfigDict()
+    """Default config for rationalizable coordination in the matrix."""
+    config = config_dict.ConfigDict()
 
-  # Basic configuration.
-  config.num_players = 8
-  config.lab2d_settings = factory(config.num_players, DEFAULT_ASCII_MAP)
+    # Basic configuration.
+    config.num_players = 8
+    config.lab2d_settings = factory(config.num_players, DEFAULT_ASCII_MAP)
 
-  # Action set configuration.
-  config.action_set = ACTION_SET
-  # Observation format configuration.
-  config.individual_observation_names = [
-      "RGB",
-      "INVENTORY",
-      "READY_TO_SHOOT",
-      "POSITION",
-      "ORIENTATION",
-      "INTERACTION_INVENTORIES",
-  ]
-  config.global_observation_names = [
-      "WORLD.RGB",
-  ]
+    # Action set configuration.
+    config.action_set = ACTION_SET
+    # Observation format configuration.
+    config.individual_observation_names = [
+        "RGB",
+        "INVENTORY",
+        "READY_TO_SHOOT",
+        "POSITION",
+        "ORIENTATION",
+        "INTERACTION_INVENTORIES",
+    ]
+    config.global_observation_names = [
+        "WORLD.RGB",
+    ]
 
-  return config
+    return config

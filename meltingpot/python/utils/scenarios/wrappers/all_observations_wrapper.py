@@ -58,20 +58,23 @@ import numpy as np
 
 from meltingpot.python.utils.scenarios.wrappers import base
 
-GLOBAL_KEY = 'global'
-OBSERVATIONS_KEY = 'observations'
-REWARDS_KEY = 'rewards'
-ACTIONS_KEY = 'actions'
+GLOBAL_KEY = "global"
+OBSERVATIONS_KEY = "observations"
+REWARDS_KEY = "rewards"
+ACTIONS_KEY = "actions"
 
 
 class Wrapper(base.Wrapper):
-  """Exposes actions/observations/rewards from all players to all players."""
+    """Exposes actions/observations/rewards from all players to all players."""
 
-  def __init__(self, env: base.Substrate,
-               observations_to_share: Collection[str] = (),
-               share_actions: bool = False,
-               share_rewards: bool = False) -> None:
-    """Wraps an environment.
+    def __init__(
+        self,
+        env: base.Substrate,
+        observations_to_share: Collection[str] = (),
+        share_actions: bool = False,
+        share_rewards: bool = False,
+    ) -> None:
+        """Wraps an environment.
 
     Args:
       env: environment to wrap. When this wrapper closes env will also be
@@ -80,110 +83,117 @@ class Wrapper(base.Wrapper):
       share_actions: whether to show other players actions.
       share_rewards: whether to show other players rewards.
     """
-    super().__init__(env)
-    self._observations_to_share = observations_to_share
-    self._share_actions = share_actions
-    self._share_rewards = share_rewards
+        super().__init__(env)
+        self._observations_to_share = observations_to_share
+        self._share_actions = share_actions
+        self._share_rewards = share_rewards
 
-    action_spec = env.action_spec()
-    self._num_players = len(action_spec)
-    self._missing_actions = [spec.generate_value() for spec in action_spec]
+        action_spec = env.action_spec()
+        self._num_players = len(action_spec)
+        self._missing_actions = [spec.generate_value() for spec in action_spec]
 
-  def _shared_observation(
-      self,
-      observations: Sequence[Mapping[str, np.ndarray]],
-      rewards: Sequence[np.ndarray],
-      actions: Sequence[np.ndarray]):
-    """Returns shared observations."""
-    shared_observation = {}
+    def _shared_observation(
+        self,
+        observations: Sequence[Mapping[str, np.ndarray]],
+        rewards: Sequence[np.ndarray],
+        actions: Sequence[np.ndarray],
+    ):
+        """Returns shared observations."""
+        shared_observation = {}
 
-    additional_observations = {}
-    for name in self._observations_to_share:
-      additional_observations[name] = np.stack(
-          [obs[name] for obs in observations])
-    if additional_observations:
-      shared_observation[OBSERVATIONS_KEY] = additional_observations
+        additional_observations = {}
+        for name in self._observations_to_share:
+            additional_observations[name] = np.stack(
+                [obs[name] for obs in observations]
+            )
+        if additional_observations:
+            shared_observation[OBSERVATIONS_KEY] = additional_observations
 
-    if self._share_rewards:
-      shared_observation[REWARDS_KEY] = np.stack(rewards)
+        if self._share_rewards:
+            shared_observation[REWARDS_KEY] = np.stack(rewards)
 
-    if self._share_actions:
-      shared_observation[ACTIONS_KEY] = np.stack(actions)
+        if self._share_actions:
+            shared_observation[ACTIONS_KEY] = np.stack(actions)
 
-    return shared_observation
+        return shared_observation
 
-  def _adjusted_timestep(self, timestep: dm_env.TimeStep,
-                         actions: Sequence[np.ndarray]) -> dm_env.TimeStep:
-    """Returns timestep with shared observations."""
-    shared_observation = self._shared_observation(
-        observations=timestep.observation,
-        rewards=timestep.reward,
-        actions=actions)
-    if not shared_observation:
-      return timestep
-    observations = [obs.copy() for obs in timestep.observation]
-    for observation in observations:
-      observation[GLOBAL_KEY] = copy.deepcopy(shared_observation)
-    return timestep._replace(observation=observations)
+    def _adjusted_timestep(
+        self, timestep: dm_env.TimeStep, actions: Sequence[np.ndarray]
+    ) -> dm_env.TimeStep:
+        """Returns timestep with shared observations."""
+        shared_observation = self._shared_observation(
+            observations=timestep.observation, rewards=timestep.reward, actions=actions
+        )
+        if not shared_observation:
+            return timestep
+        observations = [obs.copy() for obs in timestep.observation]
+        for observation in observations:
+            observation[GLOBAL_KEY] = copy.deepcopy(shared_observation)
+        return timestep._replace(observation=observations)
 
-  def reset(self) -> dm_env.TimeStep:
-    """See base class."""
-    timestep = super().reset()
-    return self._adjusted_timestep(timestep, self._missing_actions)
+    def reset(self) -> dm_env.TimeStep:
+        """See base class."""
+        timestep = super().reset()
+        return self._adjusted_timestep(timestep, self._missing_actions)
 
-  def step(self, actions: Sequence[np.ndarray]) -> dm_env.TimeStep:
-    """See base class."""
-    timestep = super().step(actions)
-    return self._adjusted_timestep(timestep, actions)
+    def step(self, actions: Sequence[np.ndarray]) -> dm_env.TimeStep:
+        """See base class."""
+        timestep = super().step(actions)
+        return self._adjusted_timestep(timestep, actions)
 
-  def _shared_observation_spec(
-      self,
-      observation_spec: Mapping[str, dm_env.specs.Array],
-      reward_spec: dm_env.specs.Array,
-      action_spec: dm_env.specs.DiscreteArray):
-    """Returns spec of shared observations."""
-    shared_observation_spec = {}
+    def _shared_observation_spec(
+        self,
+        observation_spec: Mapping[str, dm_env.specs.Array],
+        reward_spec: dm_env.specs.Array,
+        action_spec: dm_env.specs.DiscreteArray,
+    ):
+        """Returns spec of shared observations."""
+        shared_observation_spec = {}
 
-    additional_spec = {}
-    for name in self._observations_to_share:
-      spec = observation_spec[name]
-      additional_spec[name] = spec.replace(
-          shape=(self._num_players,) + spec.shape, name=name)
-    if additional_spec:
-      shared_observation_spec[OBSERVATIONS_KEY] = additional_spec
+        additional_spec = {}
+        for name in self._observations_to_share:
+            spec = observation_spec[name]
+            additional_spec[name] = spec.replace(
+                shape=(self._num_players,) + spec.shape, name=name
+            )
+        if additional_spec:
+            shared_observation_spec[OBSERVATIONS_KEY] = additional_spec
 
-    if self._share_rewards:
-      shared_observation_spec[REWARDS_KEY] = reward_spec.replace(
-          shape=(self._num_players,), name=REWARDS_KEY)
+        if self._share_rewards:
+            shared_observation_spec[REWARDS_KEY] = reward_spec.replace(
+                shape=(self._num_players,), name=REWARDS_KEY
+            )
 
-    if self._share_actions:
-      shared_observation_spec[ACTIONS_KEY] = dm_env.specs.BoundedArray(
-          shape=(self._num_players,),
-          dtype=action_spec.dtype,
-          minimum=action_spec.minimum,
-          maximum=action_spec.maximum,
-          name=ACTIONS_KEY)
+        if self._share_actions:
+            shared_observation_spec[ACTIONS_KEY] = dm_env.specs.BoundedArray(
+                shape=(self._num_players,),
+                dtype=action_spec.dtype,
+                minimum=action_spec.minimum,
+                maximum=action_spec.maximum,
+                name=ACTIONS_KEY,
+            )
 
-    return shared_observation_spec
+        return shared_observation_spec
 
-  def observation_spec(self):
-    """See base class."""
-    observation_spec = super().observation_spec()
-    assert all(spec == observation_spec[0] for spec in observation_spec)
-    observation_spec = observation_spec[0]
+    def observation_spec(self):
+        """See base class."""
+        observation_spec = super().observation_spec()
+        assert all(spec == observation_spec[0] for spec in observation_spec)
+        observation_spec = observation_spec[0]
 
-    action_spec = super().action_spec()
-    assert all(spec == action_spec[0] for spec in action_spec)
-    action_spec = action_spec[0]
+        action_spec = super().action_spec()
+        assert all(spec == action_spec[0] for spec in action_spec)
+        action_spec = action_spec[0]
 
-    reward_spec = super().reward_spec()
-    assert all(spec == reward_spec[0] for spec in reward_spec)
-    reward_spec = reward_spec[0]
+        reward_spec = super().reward_spec()
+        assert all(spec == reward_spec[0] for spec in reward_spec)
+        reward_spec = reward_spec[0]
 
-    shared_observation_spec = self._shared_observation_spec(
-        observation_spec=observation_spec,
-        reward_spec=reward_spec,
-        action_spec=action_spec)
-    observation_spec = dict(observation_spec)
-    observation_spec[GLOBAL_KEY] = shared_observation_spec
-    return [observation_spec] * self._num_players
+        shared_observation_spec = self._shared_observation_spec(
+            observation_spec=observation_spec,
+            reward_spec=reward_spec,
+            action_spec=action_spec,
+        )
+        observation_spec = dict(observation_spec)
+        observation_spec[GLOBAL_KEY] = shared_observation_spec
+        return [observation_spec] * self._num_players

@@ -28,8 +28,9 @@ from meltingpot.python.configs import bots as bot_config
 from meltingpot.python.utils.bots import permissive_model
 from meltingpot.python.utils.bots import puppeteer_functions
 
-_MODELS_ROOT = re.sub('meltingpot/python/.*', 'meltingpot/assets/saved_models',
-                      __file__)
+_MODELS_ROOT = re.sub(
+    "meltingpot/python/.*", "meltingpot/assets/saved_models", __file__
+)
 
 AVAILABLE_BOTS = frozenset(bot_config.BOTS)
 
@@ -37,17 +38,16 @@ State = tree.Structure[np.ndarray]
 
 
 class Policy(metaclass=abc.ABCMeta):
-  """Abstract base class for a policy."""
+    """Abstract base class for a policy."""
 
-  @abc.abstractmethod
-  def initial_state(self) -> State:
-    """Returns the initial state of the agent."""
-    raise NotImplementedError()
+    @abc.abstractmethod
+    def initial_state(self) -> State:
+        """Returns the initial state of the agent."""
+        raise NotImplementedError()
 
-  @abc.abstractmethod
-  def step(self, timestep: dm_env.TimeStep,
-           prev_state: State) -> Tuple[int, State]:
-    """Steps the agent.
+    @abc.abstractmethod
+    def step(self, timestep: dm_env.TimeStep, prev_state: State) -> Tuple[int, State]:
+        """Steps the agent.
 
     Args:
       timestep: information from the environment
@@ -57,24 +57,23 @@ class Policy(metaclass=abc.ABCMeta):
       action: the action to send to the environment.
       next_state: the state for the next step call.
     """
-    raise NotImplementedError()
+        raise NotImplementedError()
 
-  @abc.abstractmethod
-  def close(self) -> None:
-    """Closes the policy."""
-    raise NotImplementedError()
+    @abc.abstractmethod
+    def close(self) -> None:
+        """Closes the policy."""
+        raise NotImplementedError()
 
-  def __enter__(self):
-    return self
+    def __enter__(self):
+        return self
 
-  def __exit__(self, *args, **kwargs):
-    del args, kwargs
-    self.close()
+    def __exit__(self, *args, **kwargs):
+        del args, kwargs
+        self.close()
 
 
-def _tensor_to_numpy(
-    tensors: tree.Structure[tf.Tensor]) -> tree.Structure[np.ndarray]:
-  """Converts tensors to numpy arrays.
+def _tensor_to_numpy(tensors: tree.Structure[tf.Tensor]) -> tree.Structure[np.ndarray]:
+    """Converts tensors to numpy arrays.
 
   Args:
     tensors: input tensors.
@@ -82,15 +81,15 @@ def _tensor_to_numpy(
   Returns:
     The values of the tensors.
   """
-  if tf.executing_eagerly():
-    return tree.map_structure(lambda x: x.numpy(), tensors)
-  else:
-    with tf.compat.v1.Session() as sess:
-      return sess.run(tensors)
+    if tf.executing_eagerly():
+        return tree.map_structure(lambda x: x.numpy(), tensors)
+    else:
+        with tf.compat.v1.Session() as sess:
+            return sess.run(tensors)
 
 
 class SavedModelPolicy(Policy):
-  """Policy wrapping a saved model for inference.
+    """Policy wrapping a saved model for inference.
 
   Note: the model should have methods:
   1. `initial_state(batch_size, trainable)`
@@ -98,123 +97,124 @@ class SavedModelPolicy(Policy):
   that accept batched inputs and produce batched outputs.
   """
 
-  def __init__(self, model_path: str) -> None:
-    """Initialize a policy instance.
+    def __init__(self, model_path: str) -> None:
+        """Initialize a policy instance.
 
     Args:
       model_path: Path to the SavedModel.
     """
-    model = tf.saved_model.load(model_path)
-    self._model = permissive_model.PermissiveModel(model)
+        model = tf.saved_model.load(model_path)
+        self._model = permissive_model.PermissiveModel(model)
 
-  def step(self, timestep: dm_env.TimeStep,
-           prev_state: State) -> Tuple[int, State]:
-    """See base class."""
-    step_type = np.array(timestep.step_type, dtype=np.int64)[None]
-    reward = np.asarray(timestep.reward, dtype=np.float32)[None]
-    discount = np.asarray(timestep.discount, dtype=np.float32)[None]
-    observation = tree.map_structure(lambda x: x[None], timestep.observation)
-    output, next_state = self._model.step(
-        step_type=step_type,
-        reward=reward,
-        discount=discount,
-        observation=observation,
-        prev_state=prev_state)
-    if isinstance(output.action, Mapping):
-      # Legacy bots trained with older action spec.
-      action = output.action['environment_action']
-    else:
-      action = output.action
-    action = int(_tensor_to_numpy(action[0]))
-    next_state = _tensor_to_numpy(next_state)
-    return action, next_state
+    def step(self, timestep: dm_env.TimeStep, prev_state: State) -> Tuple[int, State]:
+        """See base class."""
+        step_type = np.array(timestep.step_type, dtype=np.int64)[None]
+        reward = np.asarray(timestep.reward, dtype=np.float32)[None]
+        discount = np.asarray(timestep.discount, dtype=np.float32)[None]
+        observation = tree.map_structure(lambda x: x[None], timestep.observation)
+        output, next_state = self._model.step(
+            step_type=step_type,
+            reward=reward,
+            discount=discount,
+            observation=observation,
+            prev_state=prev_state,
+        )
+        if isinstance(output.action, Mapping):
+            # Legacy bots trained with older action spec.
+            action = output.action["environment_action"]
+        else:
+            action = output.action
+        action = int(_tensor_to_numpy(action[0]))
+        next_state = _tensor_to_numpy(next_state)
+        return action, next_state
 
-  def initial_state(self) -> State:
-    """See base class."""
-    state = self._model.initial_state(batch_size=1, trainable=None)
-    return _tensor_to_numpy(state)
+    def initial_state(self) -> State:
+        """See base class."""
+        state = self._model.initial_state(batch_size=1, trainable=None)
+        return _tensor_to_numpy(state)
 
-  def close(self) -> None:
-    """See base class."""
-    pass
+    def close(self) -> None:
+        """See base class."""
+        pass
 
 
-_GOAL_OBS_NAME = 'GOAL'
+_GOAL_OBS_NAME = "GOAL"
 
 
 class PuppetPolicy(Policy):
-  """Wraps a puppet deepfunc as a python bot."""
+    """Wraps a puppet deepfunc as a python bot."""
 
-  def __init__(self, puppeteer_fn: puppeteer_functions.PuppeteerFn,
-               puppet_path: str) -> None:
-    """Creates a new PuppetBot.
+    def __init__(
+        self, puppeteer_fn: puppeteer_functions.PuppeteerFn, puppet_path: str
+    ) -> None:
+        """Creates a new PuppetBot.
 
     Args:
       puppeteer_fn: The puppeteer function. This will be called at every step to
         obtain the goal of that step for the underlying puppet.
       puppet_path: Path to the puppet's saved model.
     """
-    self._puppeteer_fn = puppeteer_fn
-    self._puppet = SavedModelPolicy(puppet_path)
+        self._puppeteer_fn = puppeteer_fn
+        self._puppet = SavedModelPolicy(puppet_path)
 
-  def _puppeteer_initial_state(self) -> int:
-    return 0
+    def _puppeteer_initial_state(self) -> int:
+        return 0
 
-  def _puppeteer_step(self, timestep: dm_env.TimeStep,
-                      prev_state: int) -> Tuple[dm_env.TimeStep, int]:
-    """Returns the transformed observation for the puppet step."""
-    goal = self._puppeteer_fn(prev_state, timestep.observation)
-    next_state = prev_state + 1
-    puppet_observation = timestep.observation.copy()
-    puppet_observation[_GOAL_OBS_NAME] = goal
-    puppet_timestep = timestep._replace(observation=puppet_observation)
-    return puppet_timestep, next_state
+    def _puppeteer_step(
+        self, timestep: dm_env.TimeStep, prev_state: int
+    ) -> Tuple[dm_env.TimeStep, int]:
+        """Returns the transformed observation for the puppet step."""
+        goal = self._puppeteer_fn(prev_state, timestep.observation)
+        next_state = prev_state + 1
+        puppet_observation = timestep.observation.copy()
+        puppet_observation[_GOAL_OBS_NAME] = goal
+        puppet_timestep = timestep._replace(observation=puppet_observation)
+        return puppet_timestep, next_state
 
-  def step(self, timestep: dm_env.TimeStep,
-           prev_state: State) -> Tuple[int, State]:
-    """See base class."""
-    puppet_timestep, puppeteer_state = self._puppeteer_step(
-        timestep, prev_state['puppeteer'])
-    action, puppet_state = self._puppet.step(puppet_timestep,
-                                             prev_state['puppet'])
-    next_state = {
-        'puppeteer': puppeteer_state,
-        'puppet': puppet_state,
-    }
-    return action, next_state
+    def step(self, timestep: dm_env.TimeStep, prev_state: State) -> Tuple[int, State]:
+        """See base class."""
+        puppet_timestep, puppeteer_state = self._puppeteer_step(
+            timestep, prev_state["puppeteer"]
+        )
+        action, puppet_state = self._puppet.step(puppet_timestep, prev_state["puppet"])
+        next_state = {
+            "puppeteer": puppeteer_state,
+            "puppet": puppet_state,
+        }
+        return action, next_state
 
-  def initial_state(self) -> State:
-    """See base class."""
-    return {
-        'puppeteer': 0,
-        'puppet': self._puppet.initial_state(),
-    }
+    def initial_state(self) -> State:
+        """See base class."""
+        return {
+            "puppeteer": 0,
+            "puppet": self._puppet.initial_state(),
+        }
 
-  def close(self) -> None:
-    """See base class."""
-    self._puppet.close()
+    def close(self) -> None:
+        """See base class."""
+        self._puppet.close()
 
 
 def get_config(bot_name: str) -> config_dict.ConfigDict:
-  """Returns a config for the specified bot.
+    """Returns a config for the specified bot.
 
   Args:
     bot_name: name of the bot. Must be in AVAILABLE_BOTS.
   """
-  if bot_name not in AVAILABLE_BOTS:
-    raise ValueError(f'Unknown bot {bot_name!r}.')
-  bot = bot_config.BOTS[bot_name]
-  config = config_dict.create(
-      bot_name=bot_name,
-      substrate=bot.substrate,
-      puppeteer_fn=bot.puppeteer_fn,
-      saved_model_path=os.path.join(_MODELS_ROOT, bot.substrate, bot.model),
-  )
-  return config.lock()
+    if bot_name not in AVAILABLE_BOTS:
+        raise ValueError(f"Unknown bot {bot_name!r}.")
+    bot = bot_config.BOTS[bot_name]
+    config = config_dict.create(
+        bot_name=bot_name,
+        substrate=bot.substrate,
+        puppeteer_fn=bot.puppeteer_fn,
+        saved_model_path=os.path.join(_MODELS_ROOT, bot.substrate, bot.model),
+    )
+    return config.lock()
 
 
 def build(config: config_dict.ConfigDict) -> Policy:
-  """Builds a bot policy for the given config.
+    """Builds a bot policy for the given config.
 
   Args:
     config: bot config resulting from `get_config`.
@@ -222,7 +222,7 @@ def build(config: config_dict.ConfigDict) -> Policy:
   Returns:
     The bot policy.
   """
-  if config.puppeteer_fn:
-    return PuppetPolicy(config.puppeteer_fn, config.saved_model_path)
-  else:
-    return SavedModelPolicy(config.saved_model_path)
+    if config.puppeteer_fn:
+        return PuppetPolicy(config.puppeteer_fn, config.saved_model_path)
+    else:
+        return SavedModelPolicy(config.saved_model_path)

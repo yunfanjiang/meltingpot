@@ -164,49 +164,25 @@ WALL = {
             "component": "StateManager",
             "kwargs": {
                 "initialState": "wall",
-                "stateConfigs": [{
-                    "state": "wall",
-                    "layer": "upperPhysical",
-                    "sprite": "Wall",
-                }],
-            }
+                "stateConfigs": [
+                    {"state": "wall", "layer": "upperPhysical", "sprite": "Wall",}
+                ],
+            },
         },
-        {
-            "component": "Transform",
-        },
+        {"component": "Transform",},
         {
             "component": "Appearance",
             "kwargs": {
                 "spriteNames": ["Wall"],
                 # This color is a dark shade of purple.
-                "spriteRGBColors": [(66, 28, 82)]
-            }
+                "spriteRGBColors": [(66, 28, 82)],
+            },
         },
-        {
-            "component": "BeamBlocker",
-            "kwargs": {
-                "beamType": "zapHit"
-            }
-        },
-        {
-            "component": "BeamBlocker",
-            "kwargs": {
-                "beamType": "fire_1"
-            }
-        },
-        {
-            "component": "BeamBlocker",
-            "kwargs": {
-                "beamType": "fire_2"
-            }
-        },
-        {
-            "component": "BeamBlocker",
-            "kwargs": {
-                "beamType": "fire_3"
-            }
-        },
-    ]
+        {"component": "BeamBlocker", "kwargs": {"beamType": "zapHit"}},
+        {"component": "BeamBlocker", "kwargs": {"beamType": "fire_1"}},
+        {"component": "BeamBlocker", "kwargs": {"beamType": "fire_2"}},
+        {"component": "BeamBlocker", "kwargs": {"beamType": "fire_3"}},
+    ],
 }
 
 SPAWN_POINT = {
@@ -216,338 +192,315 @@ SPAWN_POINT = {
             "component": "StateManager",
             "kwargs": {
                 "initialState": "spawnPoint",
-                "stateConfigs": [{
-                    "state": "spawnPoint",
-                    "layer": "logic",
-                    "groups": ["spawnPoints"]
-                }],
-            }
+                "stateConfigs": [
+                    {"state": "spawnPoint", "layer": "logic", "groups": ["spawnPoints"]}
+                ],
+            },
         },
-        {
-            "component": "Transform",
-        },
-    ]
+        {"component": "Transform",},
+    ],
 }
 
 
 def create_berry_prefab(lua_index: int):
-  """Return a berry prefab for the given color index (initial color)."""
-  berry = {
-      "name": "berry",
-      "components": [
-          {
-              "component": "StateManager",
-              "kwargs": {
-                  "initialState": "unripe_{}".format(lua_index),
-                  "stateConfigs": [
-                      # Unripe states.
-                      {
-                          "state": "unripe_1",
-                          "layer": "lowerPhysical",
-                          "sprite": "UnripeBerry_1",
-                          "groups": ["unripes"]
-                      },
-                      {
-                          "state": "unripe_2",
-                          "layer": "lowerPhysical",
-                          "sprite": "UnripeBerry_2",
-                          "groups": ["unripes"]
-                      },
-                      {
-                          "state": "unripe_3",
-                          "layer": "lowerPhysical",
-                          "sprite": "UnripeBerry_3",
-                          "groups": ["unripes"]
-                      },
-                      # Ripe states.
-                      {
-                          "state": "ripe_1",
-                          "layer": "lowerPhysical",
-                          "sprite": "RipeBerry_1",
-                          "groups": []
-                      },
-                      {
-                          "state": "ripe_2",
-                          "layer": "lowerPhysical",
-                          "sprite": "RipeBerry_2",
-                          "groups": []
-                      },
-                      {
-                          "state": "ripe_3",
-                          "layer": "lowerPhysical",
-                          "sprite": "RipeBerry_3",
-                          "groups": []
-                      },
-                  ]
-              }
-          },
-          {
-              "component": "Transform",
-          },
-          {
-              "component": "Appearance",
-              "kwargs": {
-                  "renderMode": "ascii_shape",
-                  "spriteNames": [
-                      "UnripeBerry_1",
-                      "UnripeBerry_2",
-                      "UnripeBerry_3",
-                      "RipeBerry_1",
-                      "RipeBerry_2",
-                      "RipeBerry_3",
-                  ],
-                  "spriteShapes": [
-                      shapes.UNRIPE_BERRY,
-                      shapes.UNRIPE_BERRY,
-                      shapes.UNRIPE_BERRY,
-                      shapes.BERRY,
-                      shapes.BERRY,
-                      shapes.BERRY,
-                  ],
-                  "palettes": [
-                      # Unripe colors
-                      {
-                          "*": COLORS[0],
-                          "@": shapes.scale_color(COLORS[0], 1.5),
-                          "#": (255, 255, 255, 255),
-                          "x": (0, 0, 0, 0)
-                      },
-                      {
-                          "*": COLORS[1],
-                          "@": shapes.scale_color(COLORS[1], 1.5),
-                          "#": (255, 255, 255, 255),
-                          "x": (0, 0, 0, 0)
-                      },
-                      {
-                          "*": COLORS[2],
-                          "@": shapes.scale_color(COLORS[2], 1.5),
-                          "#": (255, 255, 255, 255),
-                          "x": (0, 0, 0, 0)
-                      },
-                      # Ripe colors
-                      {
-                          "*": COLORS[0],
-                          "@": shapes.scale_color(COLORS[0], 1.5),
-                          "#": (255, 255, 255, 255),
-                          "x": (0, 0, 0, 0)
-                      },
-                      {
-                          "*": COLORS[1],
-                          "@": shapes.scale_color(COLORS[1], 1.5),
-                          "#": (255, 255, 255, 255),
-                          "x": (0, 0, 0, 0)
-                      },
-                      {
-                          "*": COLORS[2],
-                          "@": shapes.scale_color(COLORS[2], 1.5),
-                          "#": (255, 255, 255, 255),
-                          "x": (0, 0, 0, 0)
-                      },
-                  ],
-                  # Note: the berries do not rotate in this version (unlike in
-                  # the original allelopathic_harvest version, where they do).
-                  "noRotates": [True] * (NUM_BERRY_TYPES * 2)
-              }
-          },
-          {
-              "component": "Berry",
-              "kwargs": {
-                  "unripePrefix": "unripe",
-                  "ripePrefix": "ripe",
-                  "colorId": lua_index,
-              }
-          },
-          {
-              "component": "Edible",
-              "kwargs": {
-                  "name": "Edible",
-                  "eatingSetsColorToNewborn": True,
-              }
-          },
-          {
-              "component": "Regrowth",
-              "kwargs": {
-                  "minimumTimeToRipen": 10,
-                  "baseRate": 5e-6,
-                  "linearGrowth": True,
-              }
-          },
-          {
-              "component": "Coloring",
-              "kwargs": {
-                  "numColors": NUM_BERRY_TYPES,
-              }
-          },
-      ]
-  }
-  return berry
+    """Return a berry prefab for the given color index (initial color)."""
+    berry = {
+        "name": "berry",
+        "components": [
+            {
+                "component": "StateManager",
+                "kwargs": {
+                    "initialState": "unripe_{}".format(lua_index),
+                    "stateConfigs": [
+                        # Unripe states.
+                        {
+                            "state": "unripe_1",
+                            "layer": "lowerPhysical",
+                            "sprite": "UnripeBerry_1",
+                            "groups": ["unripes"],
+                        },
+                        {
+                            "state": "unripe_2",
+                            "layer": "lowerPhysical",
+                            "sprite": "UnripeBerry_2",
+                            "groups": ["unripes"],
+                        },
+                        {
+                            "state": "unripe_3",
+                            "layer": "lowerPhysical",
+                            "sprite": "UnripeBerry_3",
+                            "groups": ["unripes"],
+                        },
+                        # Ripe states.
+                        {
+                            "state": "ripe_1",
+                            "layer": "lowerPhysical",
+                            "sprite": "RipeBerry_1",
+                            "groups": [],
+                        },
+                        {
+                            "state": "ripe_2",
+                            "layer": "lowerPhysical",
+                            "sprite": "RipeBerry_2",
+                            "groups": [],
+                        },
+                        {
+                            "state": "ripe_3",
+                            "layer": "lowerPhysical",
+                            "sprite": "RipeBerry_3",
+                            "groups": [],
+                        },
+                    ],
+                },
+            },
+            {"component": "Transform",},
+            {
+                "component": "Appearance",
+                "kwargs": {
+                    "renderMode": "ascii_shape",
+                    "spriteNames": [
+                        "UnripeBerry_1",
+                        "UnripeBerry_2",
+                        "UnripeBerry_3",
+                        "RipeBerry_1",
+                        "RipeBerry_2",
+                        "RipeBerry_3",
+                    ],
+                    "spriteShapes": [
+                        shapes.UNRIPE_BERRY,
+                        shapes.UNRIPE_BERRY,
+                        shapes.UNRIPE_BERRY,
+                        shapes.BERRY,
+                        shapes.BERRY,
+                        shapes.BERRY,
+                    ],
+                    "palettes": [
+                        # Unripe colors
+                        {
+                            "*": COLORS[0],
+                            "@": shapes.scale_color(COLORS[0], 1.5),
+                            "#": (255, 255, 255, 255),
+                            "x": (0, 0, 0, 0),
+                        },
+                        {
+                            "*": COLORS[1],
+                            "@": shapes.scale_color(COLORS[1], 1.5),
+                            "#": (255, 255, 255, 255),
+                            "x": (0, 0, 0, 0),
+                        },
+                        {
+                            "*": COLORS[2],
+                            "@": shapes.scale_color(COLORS[2], 1.5),
+                            "#": (255, 255, 255, 255),
+                            "x": (0, 0, 0, 0),
+                        },
+                        # Ripe colors
+                        {
+                            "*": COLORS[0],
+                            "@": shapes.scale_color(COLORS[0], 1.5),
+                            "#": (255, 255, 255, 255),
+                            "x": (0, 0, 0, 0),
+                        },
+                        {
+                            "*": COLORS[1],
+                            "@": shapes.scale_color(COLORS[1], 1.5),
+                            "#": (255, 255, 255, 255),
+                            "x": (0, 0, 0, 0),
+                        },
+                        {
+                            "*": COLORS[2],
+                            "@": shapes.scale_color(COLORS[2], 1.5),
+                            "#": (255, 255, 255, 255),
+                            "x": (0, 0, 0, 0),
+                        },
+                    ],
+                    # Note: the berries do not rotate in this version (unlike in
+                    # the original allelopathic_harvest version, where they do).
+                    "noRotates": [True] * (NUM_BERRY_TYPES * 2),
+                },
+            },
+            {
+                "component": "Berry",
+                "kwargs": {
+                    "unripePrefix": "unripe",
+                    "ripePrefix": "ripe",
+                    "colorId": lua_index,
+                },
+            },
+            {
+                "component": "Edible",
+                "kwargs": {"name": "Edible", "eatingSetsColorToNewborn": True,},
+            },
+            {
+                "component": "Regrowth",
+                "kwargs": {
+                    "minimumTimeToRipen": 10,
+                    "baseRate": 5e-6,
+                    "linearGrowth": True,
+                },
+            },
+            {"component": "Coloring", "kwargs": {"numColors": NUM_BERRY_TYPES,}},
+        ],
+    }
+    return berry
 
 
 def create_avatar_object(player_idx: int) -> Dict[str, Any]:
-  """Return the avatar for the player numbered `player_idx`."""
-  # Lua is 1-indexed.
-  lua_index = player_idx + 1
+    """Return the avatar for the player numbered `player_idx`."""
+    # Lua is 1-indexed.
+    lua_index = player_idx + 1
 
-  live_state_name = "player{}".format(lua_index)
-  avatar_sprite_name = "avatarSprite{}".format(lua_index)
-  avatar_object = {
-      "name": "avatar",
-      "components": [
-          {
-              "component": "StateManager",
-              "kwargs": {
-                  "initialState": live_state_name,
-                  "stateConfigs": [
-                      # Initial player state.
-                      {"state": live_state_name,
-                       "layer": "upperPhysical",
-                       "sprite": avatar_sprite_name,
-                       "contact": "avatar",
-                       "groups": ["players"]},
+    live_state_name = "player{}".format(lua_index)
+    avatar_sprite_name = "avatarSprite{}".format(lua_index)
+    avatar_object = {
+        "name": "avatar",
+        "components": [
+            {
+                "component": "StateManager",
+                "kwargs": {
+                    "initialState": live_state_name,
+                    "stateConfigs": [
+                        # Initial player state.
+                        {
+                            "state": live_state_name,
+                            "layer": "upperPhysical",
+                            "sprite": avatar_sprite_name,
+                            "contact": "avatar",
+                            "groups": ["players"],
+                        },
+                        # Player wait type for when they have been zapped out.
+                        {"state": "playerWait", "groups": ["playerWaits"]},
+                    ],
+                },
+            },
+            {"component": "Transform",},
+            {
+                "component": "Appearance",
+                "kwargs": {
+                    "renderMode": "ascii_shape",
+                    "spriteNames": [avatar_sprite_name],
+                    "spriteShapes": [shapes.AVATAR_DEFAULT],
+                    # This color is white. It should never appear in gameplay. So
+                    # if a white colored avatar does appear then something is
+                    # broken.
+                    "palettes": [shapes.get_palette((255, 255, 255))],
+                    "noRotates": [False],
+                },
+            },
+            {
+                "component": "Avatar",
+                "kwargs": {
+                    "index": lua_index,
+                    "aliveState": live_state_name,
+                    "waitState": "playerWait",
+                    "speed": 1.0,
+                    "spawnGroup": "spawnPoints",
+                    "actionOrder": [
+                        "move",
+                        "turn",
+                        "fireZap",
+                        "fire_1",
+                        "fire_2",
+                        "fire_3",
+                    ],
+                    "actionSpec": {
+                        "move": {"default": 0, "min": 0, "max": _NUM_DIRECTIONS},
+                        "turn": {"default": 0, "min": -1, "max": 1},
+                        "fireZap": {"default": 0, "min": 0, "max": 1},
+                        "fire_1": {"default": 0, "min": 0, "max": 1},
+                        "fire_2": {"default": 0, "min": 0, "max": 1},
+                        "fire_3": {"default": 0, "min": 0, "max": 1},
+                    },
+                    "view": {
+                        "left": 5,
+                        "right": 5,
+                        "forward": 9,
+                        "backward": 1,
+                        "centered": False,
+                    },
+                },
+            },
+            {
+                "component": "Zapper",
+                "kwargs": {
+                    "cooldownTime": 4,
+                    "beamLength": 3,
+                    "beamRadius": 1,
+                    "framesTillRespawn": 25,
+                    "penaltyForBeingZapped": 0,  # leave this always at 0.
+                    "rewardForZapping": 0,  # leave this always at 0.
+                    "removeHitPlayer": False,
+                },
+            },
+            {"component": "ReadyToShootObservation",},
+            {
+                "component": "Taste",
+                "kwargs": {
+                    "mostTastyBerryId": 1,  # A taste for the red berry.
+                    "rewardMostTasty": 2,
+                },
+            },
+            {
+                "component": "ColorZapper",
+                "kwargs": {
+                    "cooldownTime": 2,
+                    "beamLength": 3,
+                    "beamRadius": 0,
+                    "numColorZappers": NUM_BERRY_TYPES,
+                    "beamColors": COLORS,
+                    # When `eatingSetsColorToNewborn` and `stochasticallyCryptic`
+                    # are both true than stochastically change back to the
+                    # newborn color after eating a berry with probability
+                    # inversely related to the monoculture fraction. So larger
+                    # monoculture fractions yield lower probabilities of changing
+                    # back to the newborn color.
+                    "stochasticallyCryptic": True,
+                },
+            },
+            {
+                "component": "RewardForColoring",
+                "kwargs": {"berryIds": [], "amount": 1, "rewardCooldown": 50,},
+            },
+            {
+                "component": "RewardForZapping",
+                "kwargs": {
+                    # Color 0 is the "newborn" (free rider) color.
+                    # Color 1 is red, color 2 is green, and color 3 is blue.
+                    "targetColors": [],
+                    "amounts": {},
+                },
+            },
+            {
+                "component": "AvatarMetricReporter",
+                "kwargs": {
+                    "metrics": [
+                        {
+                            "name": "COLOR_ID",
+                            "type": "Doubles",
+                            "shape": [],
+                            "component": "ColorZapper",
+                            "variable": "colorId",
+                        },
+                        {
+                            "name": "MOST_TASTY_BERRY_ID",
+                            "type": "Doubles",
+                            "shape": [],
+                            "component": "Taste",
+                            "variable": "mostTastyBerryId",
+                        },
+                    ]
+                },
+            },
+            {
+                "component": "LocationObserver",
+                "kwargs": {"objectIsAvatar": True, "alsoReportOrientation": True},
+            },
+            {"component": "AvatarIdsInViewObservation",},
+            {"component": "AvatarIdsInRangeToZapObservation",},
+        ],
+    }
+    return avatar_object
 
-                      # Player wait type for when they have been zapped out.
-                      {"state": "playerWait",
-                       "groups": ["playerWaits"]},
-                  ]
-              }
-          },
-          {
-              "component": "Transform",
-          },
-          {
-              "component": "Appearance",
-              "kwargs": {
-                  "renderMode": "ascii_shape",
-                  "spriteNames": [avatar_sprite_name],
-                  "spriteShapes": [shapes.AVATAR_DEFAULT],
-                  # This color is white. It should never appear in gameplay. So
-                  # if a white colored avatar does appear then something is
-                  # broken.
-                  "palettes": [shapes.get_palette((255, 255, 255))],
-                  "noRotates": [False]
-              }
-          },
-          {
-              "component": "Avatar",
-              "kwargs": {
-                  "index": lua_index,
-                  "aliveState": live_state_name,
-                  "waitState": "playerWait",
-                  "speed": 1.0,
-                  "spawnGroup": "spawnPoints",
-                  "actionOrder": ["move",
-                                  "turn",
-                                  "fireZap",
-                                  "fire_1",
-                                  "fire_2",
-                                  "fire_3"],
-                  "actionSpec": {
-                      "move": {"default": 0, "min": 0, "max": _NUM_DIRECTIONS},
-                      "turn": {"default": 0, "min": -1, "max": 1},
-                      "fireZap": {"default": 0, "min": 0, "max": 1},
-                      "fire_1": {"default": 0, "min": 0, "max": 1},
-                      "fire_2": {"default": 0, "min": 0, "max": 1},
-                      "fire_3": {"default": 0, "min": 0, "max": 1},
-                  },
-                  "view": {
-                      "left": 5,
-                      "right": 5,
-                      "forward": 9,
-                      "backward": 1,
-                      "centered": False
-                  },
-              }
-          },
-          {
-              "component": "Zapper",
-              "kwargs": {
-                  "cooldownTime": 4,
-                  "beamLength": 3,
-                  "beamRadius": 1,
-                  "framesTillRespawn": 25,
-                  "penaltyForBeingZapped": 0,  # leave this always at 0.
-                  "rewardForZapping": 0,  # leave this always at 0.
-                  "removeHitPlayer": False,
-              }
-          },
-          {
-              "component": "ReadyToShootObservation",
-          },
-          {
-              "component": "Taste",
-              "kwargs": {
-                  "mostTastyBerryId": 1,  # A taste for the red berry.
-                  "rewardMostTasty": 2,
-              }
-          },
-          {
-              "component": "ColorZapper",
-              "kwargs": {
-                  "cooldownTime": 2,
-                  "beamLength": 3,
-                  "beamRadius": 0,
-                  "numColorZappers": NUM_BERRY_TYPES,
-                  "beamColors": COLORS,
-                  # When `eatingSetsColorToNewborn` and `stochasticallyCryptic`
-                  # are both true than stochastically change back to the
-                  # newborn color after eating a berry with probability
-                  # inversely related to the monoculture fraction. So larger
-                  # monoculture fractions yield lower probabilities of changing
-                  # back to the newborn color.
-                  "stochasticallyCryptic": True,
-              }
-          },
-          {
-              "component": "RewardForColoring",
-              "kwargs": {
-                  "berryIds": [],
-                  "amount": 1,
-                  "rewardCooldown": 50,
-              }
-          },
-          {
-              "component": "RewardForZapping",
-              "kwargs": {
-                  # Color 0 is the "newborn" (free rider) color.
-                  # Color 1 is red, color 2 is green, and color 3 is blue.
-                  "targetColors": [],
-                  "amounts": {},
-              }
-          },
-          {
-              "component": "AvatarMetricReporter",
-              "kwargs": {
-                  "metrics": [
-                      {"name": "COLOR_ID",
-                       "type": "Doubles",
-                       "shape": [],
-                       "component": "ColorZapper",
-                       "variable": "colorId"},
-
-                      {"name": "MOST_TASTY_BERRY_ID",
-                       "type": "Doubles",
-                       "shape": [],
-                       "component": "Taste",
-                       "variable": "mostTastyBerryId"},
-                  ]
-              }
-          },
-          {
-              "component": "LocationObserver",
-              "kwargs": {
-                  "objectIsAvatar": True,
-                  "alsoReportOrientation": True
-              }
-          },
-          {
-              "component": "AvatarIdsInViewObservation",
-          },
-          {
-              "component": "AvatarIdsInRangeToZapObservation",
-          },
-      ]
-  }
-  return avatar_object
 
 # PREFABS is a dictionary mapping names to template game objects that can
 # be cloned and placed in multiple locations accoring to an ascii map.
@@ -564,22 +517,22 @@ PREFABS = {
 NUM_PLAYERS_UPPER_BOUND = 60
 PLAYER_COLOR_PALETTES = []
 for i in range(NUM_PLAYERS_UPPER_BOUND):
-  PLAYER_COLOR_PALETTES.append(shapes.get_palette(colors.palette[i]))
+    PLAYER_COLOR_PALETTES.append(shapes.get_palette(colors.palette[i]))
 
 # Primitive action components.
 # pylint: disable=bad-whitespace
 # pyformat: disable
-NOOP       = {"move": 0, "turn":  0, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 0}
-FORWARD    = {"move": 1, "turn":  0, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 0}
-STEP_RIGHT = {"move": 2, "turn":  0, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 0}
-BACKWARD   = {"move": 3, "turn":  0, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 0}
-STEP_LEFT  = {"move": 4, "turn":  0, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 0}
-TURN_LEFT  = {"move": 0, "turn": -1, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 0}
-TURN_RIGHT = {"move": 0, "turn":  1, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 0}
-FIRE_ZAP   = {"move": 0, "turn":  0, "fireZap": 1, "fire_1": 0, "fire_2": 0, "fire_3": 0}
-FIRE_ONE   = {"move": 0, "turn":  0, "fireZap": 0, "fire_1": 1, "fire_2": 0, "fire_3": 0}
-FIRE_TWO   = {"move": 0, "turn":  0, "fireZap": 0, "fire_1": 0, "fire_2": 1, "fire_3": 0}
-FIRE_THREE = {"move": 0, "turn":  0, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 1}
+NOOP = {"move": 0, "turn": 0, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 0}
+FORWARD = {"move": 1, "turn": 0, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 0}
+STEP_RIGHT = {"move": 2, "turn": 0, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 0}
+BACKWARD = {"move": 3, "turn": 0, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 0}
+STEP_LEFT = {"move": 4, "turn": 0, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 0}
+TURN_LEFT = {"move": 0, "turn": -1, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 0}
+TURN_RIGHT = {"move": 0, "turn": 1, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 0}
+FIRE_ZAP = {"move": 0, "turn": 0, "fireZap": 1, "fire_1": 0, "fire_2": 0, "fire_3": 0}
+FIRE_ONE = {"move": 0, "turn": 0, "fireZap": 0, "fire_1": 1, "fire_2": 0, "fire_3": 0}
+FIRE_TWO = {"move": 0, "turn": 0, "fireZap": 0, "fire_1": 0, "fire_2": 1, "fire_3": 0}
+FIRE_THREE = {"move": 0, "turn": 0, "fireZap": 0, "fire_1": 0, "fire_2": 0, "fire_3": 1}
 # pyformat: enable
 # pylint: enable=bad-whitespace
 
@@ -602,372 +555,384 @@ ACTION_SET = (
 # logic. In this case, that includes holding the global berry counters to
 # implement the regrowth rate, as well as some of the observations.
 def create_scene():
-  """Creates the global scene."""
-  scene = {
-      "name": "scene",
-      "components": [
-          {
-              "component": "StateManager",
-              "kwargs": {
-                  "initialState": "scene",
-                  "stateConfigs": [{
-                      "state": "scene",
-                  }],
-              }
-          },
-          {
-              "component": "Transform",
-          },
-          {
-              "component": "GlobalBerryTracker",
-              "kwargs": {
-                  "numBerryTypes": NUM_BERRY_TYPES,
-                  "numPlayers": NUM_PLAYERS,
-              }
-          },
-          {
-              "component": "GlobalZapTracker",
-              "kwargs": {
-                  "numBerryTypes": NUM_BERRY_TYPES,
-                  "numPlayers": NUM_PLAYERS,
-              }
-          },
-          {
-              "component": "GlobalMetricHolder",
-              "kwargs": {
-                  "metrics": [
-                      {"type": "tensor.Int32Tensor",
-                       "shape": (NUM_PLAYERS, NUM_PLAYERS),
-                       "variable": "playerZapMatrix"},
-                  ]
-              }
-          },
-          {
-              "component": "GlobalMetricReporter",
-              "kwargs": {
-                  "metrics": [
-                      {"name": "RIPE_BERRIES_BY_TYPE",
-                       "type": "tensor.Int32Tensor",
-                       "shape": (NUM_BERRY_TYPES,),
-                       "component": "GlobalBerryTracker",
-                       "variable": "ripeBerriesPerType"},
-
-                      {"name": "UNRIPE_BERRIES_BY_TYPE",
-                       "type": "tensor.Int32Tensor",
-                       "shape": (NUM_BERRY_TYPES,),
-                       "component": "GlobalBerryTracker",
-                       "variable": "unripeBerriesPerType"},
-
-                      {"name": "BERRIES_BY_TYPE",
-                       "type": "tensor.Int32Tensor",
-                       "shape": (NUM_BERRY_TYPES,),
-                       "component": "GlobalBerryTracker",
-                       "variable": "berriesPerType"},
-
-                      {"name": "COLORING_BY_PLAYER",
-                       "type": "tensor.Int32Tensor",
-                       "shape": (NUM_BERRY_TYPES, NUM_PLAYERS),
-                       "component": "GlobalBerryTracker",
-                       "variable": "coloringByPlayerMatrix"},
-
-                      {"name": "EATING_TYPES_BY_PLAYER",
-                       "type": "tensor.Int32Tensor",
-                       "shape": (NUM_BERRY_TYPES, NUM_PLAYERS),
-                       "component": "GlobalBerryTracker",
-                       "variable": "eatingTypesByPlayerMatrix"},
-
-                      {"name": "BERRIES_PER_TYPE_BY_COLOR_OF_COLORER",
-                       "type": "tensor.Int32Tensor",
-                       "shape": (NUM_BERRY_TYPES, NUM_BERRY_TYPES + 1),
-                       "component": "GlobalBerryTracker",
-                       "variable": "berryTypesByColorOfColorer"},
-
-                      {"name": "BERRIES_PER_TYPE_BY_TASTE_OF_COLORER",
-                       "type": "tensor.Int32Tensor",
-                       "shape": (NUM_BERRY_TYPES, NUM_BERRY_TYPES),
-                       "component": "GlobalBerryTracker",
-                       "variable": "berryTypesByTasteOfColorer"},
-
-                      {"name": "PLAYER_TIMEOUT_COUNT",
-                       "type": "tensor.Int32Tensor",
-                       "shape": (NUM_PLAYERS, NUM_PLAYERS),
-                       "component": "GlobalZapTracker",
-                       "variable": "fullZapCountMatrix"},
-
-                      {"name": "COLOR_BY_COLOR_ZAP_COUNTS",
-                       "type": "tensor.Int32Tensor",
-                       "shape": (NUM_BERRY_TYPES + 1, NUM_BERRY_TYPES + 1),
-                       "component": "GlobalZapTracker",
-                       "variable": "colorByColorZapCounts"},
-
-                      {"name": "COLOR_BY_TASTE_ZAP_COUNTS",
-                       "type": "tensor.Int32Tensor",
-                       "shape": (NUM_BERRY_TYPES + 1, NUM_BERRY_TYPES),
-                       "component": "GlobalZapTracker",
-                       "variable": "colorByTasteZapCounts"},
-
-                      {"name": "TASTE_BY_TASTE_ZAP_COUNTS",
-                       "type": "tensor.Int32Tensor",
-                       "shape": (NUM_BERRY_TYPES, NUM_BERRY_TYPES),
-                       "component": "GlobalZapTracker",
-                       "variable": "tasteByTasteZapCounts"},
-
-                      {"name": "TASTE_BY_COLOR_ZAP_COUNTS",
-                       "type": "tensor.Int32Tensor",
-                       "shape": (NUM_BERRY_TYPES, NUM_BERRY_TYPES + 1),
-                       "component": "GlobalZapTracker",
-                       "variable": "tasteByColorZapCounts"},
-
-                      {"name": "WHO_ZAPPED_WHO",
-                       "type": "tensor.Int32Tensor",
-                       "shape": (NUM_PLAYERS, NUM_PLAYERS),
-                       "component": "GlobalMetricHolder",
-                       "variable": "playerZapMatrix"},
-                  ]
-              }
-          },
-      ]
-  }
-  return scene
+    """Creates the global scene."""
+    scene = {
+        "name": "scene",
+        "components": [
+            {
+                "component": "StateManager",
+                "kwargs": {
+                    "initialState": "scene",
+                    "stateConfigs": [{"state": "scene",}],
+                },
+            },
+            {"component": "Transform",},
+            {
+                "component": "GlobalBerryTracker",
+                "kwargs": {
+                    "numBerryTypes": NUM_BERRY_TYPES,
+                    "numPlayers": NUM_PLAYERS,
+                },
+            },
+            {
+                "component": "GlobalZapTracker",
+                "kwargs": {
+                    "numBerryTypes": NUM_BERRY_TYPES,
+                    "numPlayers": NUM_PLAYERS,
+                },
+            },
+            {
+                "component": "GlobalMetricHolder",
+                "kwargs": {
+                    "metrics": [
+                        {
+                            "type": "tensor.Int32Tensor",
+                            "shape": (NUM_PLAYERS, NUM_PLAYERS),
+                            "variable": "playerZapMatrix",
+                        },
+                    ]
+                },
+            },
+            {
+                "component": "GlobalMetricReporter",
+                "kwargs": {
+                    "metrics": [
+                        {
+                            "name": "RIPE_BERRIES_BY_TYPE",
+                            "type": "tensor.Int32Tensor",
+                            "shape": (NUM_BERRY_TYPES,),
+                            "component": "GlobalBerryTracker",
+                            "variable": "ripeBerriesPerType",
+                        },
+                        {
+                            "name": "UNRIPE_BERRIES_BY_TYPE",
+                            "type": "tensor.Int32Tensor",
+                            "shape": (NUM_BERRY_TYPES,),
+                            "component": "GlobalBerryTracker",
+                            "variable": "unripeBerriesPerType",
+                        },
+                        {
+                            "name": "BERRIES_BY_TYPE",
+                            "type": "tensor.Int32Tensor",
+                            "shape": (NUM_BERRY_TYPES,),
+                            "component": "GlobalBerryTracker",
+                            "variable": "berriesPerType",
+                        },
+                        {
+                            "name": "COLORING_BY_PLAYER",
+                            "type": "tensor.Int32Tensor",
+                            "shape": (NUM_BERRY_TYPES, NUM_PLAYERS),
+                            "component": "GlobalBerryTracker",
+                            "variable": "coloringByPlayerMatrix",
+                        },
+                        {
+                            "name": "EATING_TYPES_BY_PLAYER",
+                            "type": "tensor.Int32Tensor",
+                            "shape": (NUM_BERRY_TYPES, NUM_PLAYERS),
+                            "component": "GlobalBerryTracker",
+                            "variable": "eatingTypesByPlayerMatrix",
+                        },
+                        {
+                            "name": "BERRIES_PER_TYPE_BY_COLOR_OF_COLORER",
+                            "type": "tensor.Int32Tensor",
+                            "shape": (NUM_BERRY_TYPES, NUM_BERRY_TYPES + 1),
+                            "component": "GlobalBerryTracker",
+                            "variable": "berryTypesByColorOfColorer",
+                        },
+                        {
+                            "name": "BERRIES_PER_TYPE_BY_TASTE_OF_COLORER",
+                            "type": "tensor.Int32Tensor",
+                            "shape": (NUM_BERRY_TYPES, NUM_BERRY_TYPES),
+                            "component": "GlobalBerryTracker",
+                            "variable": "berryTypesByTasteOfColorer",
+                        },
+                        {
+                            "name": "PLAYER_TIMEOUT_COUNT",
+                            "type": "tensor.Int32Tensor",
+                            "shape": (NUM_PLAYERS, NUM_PLAYERS),
+                            "component": "GlobalZapTracker",
+                            "variable": "fullZapCountMatrix",
+                        },
+                        {
+                            "name": "COLOR_BY_COLOR_ZAP_COUNTS",
+                            "type": "tensor.Int32Tensor",
+                            "shape": (NUM_BERRY_TYPES + 1, NUM_BERRY_TYPES + 1),
+                            "component": "GlobalZapTracker",
+                            "variable": "colorByColorZapCounts",
+                        },
+                        {
+                            "name": "COLOR_BY_TASTE_ZAP_COUNTS",
+                            "type": "tensor.Int32Tensor",
+                            "shape": (NUM_BERRY_TYPES + 1, NUM_BERRY_TYPES),
+                            "component": "GlobalZapTracker",
+                            "variable": "colorByTasteZapCounts",
+                        },
+                        {
+                            "name": "TASTE_BY_TASTE_ZAP_COUNTS",
+                            "type": "tensor.Int32Tensor",
+                            "shape": (NUM_BERRY_TYPES, NUM_BERRY_TYPES),
+                            "component": "GlobalZapTracker",
+                            "variable": "tasteByTasteZapCounts",
+                        },
+                        {
+                            "name": "TASTE_BY_COLOR_ZAP_COUNTS",
+                            "type": "tensor.Int32Tensor",
+                            "shape": (NUM_BERRY_TYPES, NUM_BERRY_TYPES + 1),
+                            "component": "GlobalZapTracker",
+                            "variable": "tasteByColorZapCounts",
+                        },
+                        {
+                            "name": "WHO_ZAPPED_WHO",
+                            "type": "tensor.Int32Tensor",
+                            "shape": (NUM_PLAYERS, NUM_PLAYERS),
+                            "component": "GlobalMetricHolder",
+                            "variable": "playerZapMatrix",
+                        },
+                    ]
+                },
+            },
+        ],
+    }
+    return scene
 
 
 def create_marking_overlay(player_idx: int) -> Dict[str, Any]:
-  """Create a graduated sanctions marking overlay object."""
-  # Lua is 1-indexed.
-  lua_idx = player_idx + 1
+    """Create a graduated sanctions marking overlay object."""
+    # Lua is 1-indexed.
+    lua_idx = player_idx + 1
 
-  marking_object = {
-      "name": "avatar_marking",
-      "components": [
-          {
-              "component": "StateManager",
-              "kwargs": {
-                  "initialState": "avatarMarkingWait",
-                  "stateConfigs": [
-                      # Declare one state per level of the hit logic.
-                      {"state": "level_1",
-                       "layer": "superOverlay",
-                       "sprite": "sprite_for_level_1"},
-                      {"state": "level_2",
-                       "layer": "superOverlay",
-                       "sprite": "sprite_for_level_2"},
-                      {"state": "level_3",
-                       "layer": "superOverlay",
-                       "sprite": "sprite_for_level_3"},
-
-                      # Invisible inactive (zapped out) overlay type.
-                      {"state": "avatarMarkingWait",
-                       "groups": ["avatarMarkingWaits"]},
-                  ]
-              }
-          },
-          {
-              "component": "Transform",
-          },
-          {
-              "component": "Appearance",
-              "kwargs": {
-                  "renderMode": "ascii_shape",
-                  "spriteNames": ["sprite_for_level_1",
-                                  "sprite_for_level_2",
-                                  "sprite_for_level_3"],
-                  "spriteShapes": [MARKING_LEVEL_1,
-                                   MARKING_LEVEL_2,
-                                   MARKING_LEVEL_3],
-                  "palettes": [shapes.get_palette((205, 205, 205))] * 3,
-                  "noRotates": [False] * 3
-              }
-          },
-          {
-              "component": "GraduatedSanctionsMarking",
-              "kwargs": {
-                  "playerIndex": lua_idx,
-                  "waitState": "avatarMarkingWait",
-                  "hitName": "zapHit",
-                  "recoveryTime": 50,
-                  "hitLogic": [
-                      {"levelIncrement": 1,
-                       "sourceReward": 0,
-                       "targetReward": 0,
-                       "freeze": 25},
-                      {"levelIncrement": -1,
-                       "sourceReward": 0,
-                       "targetReward": -10,
-                       "remove": True}
-                  ],
-              }
-          },
-      ]
-  }
-  return marking_object
+    marking_object = {
+        "name": "avatar_marking",
+        "components": [
+            {
+                "component": "StateManager",
+                "kwargs": {
+                    "initialState": "avatarMarkingWait",
+                    "stateConfigs": [
+                        # Declare one state per level of the hit logic.
+                        {
+                            "state": "level_1",
+                            "layer": "superOverlay",
+                            "sprite": "sprite_for_level_1",
+                        },
+                        {
+                            "state": "level_2",
+                            "layer": "superOverlay",
+                            "sprite": "sprite_for_level_2",
+                        },
+                        {
+                            "state": "level_3",
+                            "layer": "superOverlay",
+                            "sprite": "sprite_for_level_3",
+                        },
+                        # Invisible inactive (zapped out) overlay type.
+                        {
+                            "state": "avatarMarkingWait",
+                            "groups": ["avatarMarkingWaits"],
+                        },
+                    ],
+                },
+            },
+            {"component": "Transform",},
+            {
+                "component": "Appearance",
+                "kwargs": {
+                    "renderMode": "ascii_shape",
+                    "spriteNames": [
+                        "sprite_for_level_1",
+                        "sprite_for_level_2",
+                        "sprite_for_level_3",
+                    ],
+                    "spriteShapes": [MARKING_LEVEL_1, MARKING_LEVEL_2, MARKING_LEVEL_3],
+                    "palettes": [shapes.get_palette((205, 205, 205))] * 3,
+                    "noRotates": [False] * 3,
+                },
+            },
+            {
+                "component": "GraduatedSanctionsMarking",
+                "kwargs": {
+                    "playerIndex": lua_idx,
+                    "waitState": "avatarMarkingWait",
+                    "hitName": "zapHit",
+                    "recoveryTime": 50,
+                    "hitLogic": [
+                        {
+                            "levelIncrement": 1,
+                            "sourceReward": 0,
+                            "targetReward": 0,
+                            "freeze": 25,
+                        },
+                        {
+                            "levelIncrement": -1,
+                            "sourceReward": 0,
+                            "targetReward": -10,
+                            "remove": True,
+                        },
+                    ],
+                },
+            },
+        ],
+    }
+    return marking_object
 
 
 def create_colored_avatar_overlay(player_idx: int) -> Dict[str, Any]:
-  """Create a colored avatar overlay object."""
-  # Lua is 1-indexed.
-  lua_idx = player_idx + 1
+    """Create a colored avatar overlay object."""
+    # Lua is 1-indexed.
+    lua_idx = player_idx + 1
 
-  overlay_object = {
-      "name": "avatar_overlay",
-      "components": [
-          {
-              "component": "StateManager",
-              "kwargs": {
-                  "initialState": "avatarOverlayWait",
-                  "stateConfigs": [
-                      # Invisible active overlay type.
-                      {
-                          "state": "avatarOverlay",
-                          "layer": "overlay",
-                          "sprite": "NewbornAvatar",
-                          "groups": ["avatarOverlays"]
-                      },
-
-                      # Invisible inactive (zapped out) overlay type.
-                      {
-                          "state": "avatarOverlayWait",
-                          "groups": ["avatarOverlayWaits"]
-                      },
-
-                      # Colored overlay piece types for use after the player has
-                      # colored a berry with a coloring beam.
-                      {
-                          "state": "coloredPlayer_1",
-                          "layer": "overlay",
-                          "sprite": "ColoredAvatar_1",
-                          "groups": ["avatarOverlays"]
-                      },
-                      {
-                          "state": "coloredPlayer_2",
-                          "layer": "overlay",
-                          "sprite": "ColoredAvatar_2",
-                          "groups": ["avatarOverlays"]
-                      },
-                      {
-                          "state": "coloredPlayer_3",
-                          "layer": "overlay",
-                          "sprite": "ColoredAvatar_3",
-                          "groups": ["avatarOverlays"]
-                      },
-                  ]
-              }
-          },
-          {
-              "component": "Transform",
-          },
-          {
-              "component": "Appearance",
-              "kwargs": {
-                  "renderMode": "ascii_shape",
-                  "spriteNames": ["NewbornAvatar"] + [
-                      "ColoredAvatar_{}".format(i)
-                      for i in range(1, NUM_BERRY_TYPES + 1)
-                  ],
-                  "spriteShapes": [shapes.AVATAR_DEFAULT] *
-                                  (NUM_BERRY_TYPES + 1),
-                  "palettes":
-                      [shapes.get_palette((125, 125, 125))] +
-                      [shapes.get_palette(beam_color) for beam_color in COLORS],
-                  "noRotates": [False] * (NUM_BERRY_TYPES + 1)
-              }
-          },
-          {
-              "component": "AvatarConnector",
-              "kwargs": {
-                  "playerIndex": lua_idx,
-                  "aliveState": "avatarOverlay",
-                  "waitState": "avatarOverlayWait"
-              }
-          },
-      ]
-  }
-  return overlay_object
+    overlay_object = {
+        "name": "avatar_overlay",
+        "components": [
+            {
+                "component": "StateManager",
+                "kwargs": {
+                    "initialState": "avatarOverlayWait",
+                    "stateConfigs": [
+                        # Invisible active overlay type.
+                        {
+                            "state": "avatarOverlay",
+                            "layer": "overlay",
+                            "sprite": "NewbornAvatar",
+                            "groups": ["avatarOverlays"],
+                        },
+                        # Invisible inactive (zapped out) overlay type.
+                        {
+                            "state": "avatarOverlayWait",
+                            "groups": ["avatarOverlayWaits"],
+                        },
+                        # Colored overlay piece types for use after the player has
+                        # colored a berry with a coloring beam.
+                        {
+                            "state": "coloredPlayer_1",
+                            "layer": "overlay",
+                            "sprite": "ColoredAvatar_1",
+                            "groups": ["avatarOverlays"],
+                        },
+                        {
+                            "state": "coloredPlayer_2",
+                            "layer": "overlay",
+                            "sprite": "ColoredAvatar_2",
+                            "groups": ["avatarOverlays"],
+                        },
+                        {
+                            "state": "coloredPlayer_3",
+                            "layer": "overlay",
+                            "sprite": "ColoredAvatar_3",
+                            "groups": ["avatarOverlays"],
+                        },
+                    ],
+                },
+            },
+            {"component": "Transform",},
+            {
+                "component": "Appearance",
+                "kwargs": {
+                    "renderMode": "ascii_shape",
+                    "spriteNames": ["NewbornAvatar"]
+                    + [
+                        "ColoredAvatar_{}".format(i)
+                        for i in range(1, NUM_BERRY_TYPES + 1)
+                    ],
+                    "spriteShapes": [shapes.AVATAR_DEFAULT] * (NUM_BERRY_TYPES + 1),
+                    "palettes": [shapes.get_palette((125, 125, 125))]
+                    + [shapes.get_palette(beam_color) for beam_color in COLORS],
+                    "noRotates": [False] * (NUM_BERRY_TYPES + 1),
+                },
+            },
+            {
+                "component": "AvatarConnector",
+                "kwargs": {
+                    "playerIndex": lua_idx,
+                    "aliveState": "avatarOverlay",
+                    "waitState": "avatarOverlayWait",
+                },
+            },
+        ],
+    }
+    return overlay_object
 
 
 def create_avatar_and_associated_objects(num_players):
-  """Returns list of avatar objects and associated other objects."""
-  avatar_objects = []
-  additional_objects = []
-  for player_idx in range(num_players):
-    avatar_object = create_avatar_object(player_idx)
-    avatar_objects.append(avatar_object)
+    """Returns list of avatar objects and associated other objects."""
+    avatar_objects = []
+    additional_objects = []
+    for player_idx in range(num_players):
+        avatar_object = create_avatar_object(player_idx)
+        avatar_objects.append(avatar_object)
 
-    overlay_object = create_colored_avatar_overlay(player_idx)
-    marking_object = create_marking_overlay(player_idx)
-    additional_objects.append(overlay_object)
-    additional_objects.append(marking_object)
+        overlay_object = create_colored_avatar_overlay(player_idx)
+        marking_object = create_marking_overlay(player_idx)
+        additional_objects.append(overlay_object)
+        additional_objects.append(marking_object)
 
-  return avatar_objects + additional_objects
+    return avatar_objects + additional_objects
 
 
-def create_lab2d_settings(
-    ascii_map_string: str,
-    num_players: int,
-) -> Dict[str, Any]:
-  """Returns the lab2d settings.
+def create_lab2d_settings(ascii_map_string: str, num_players: int,) -> Dict[str, Any]:
+    """Returns the lab2d settings.
 
   Args:
     ascii_map_string: ascii map.
     num_players: the number of players.
   """
-  game_objects = create_avatar_and_associated_objects(NUM_PLAYERS)
-  settings = {
-      "levelName": "allelopathic_harvest",
-      "levelDirectory":
-            "meltingpot/lua/levels",
-      "numPlayers": num_players,
-      "episodeLengthFrames": 2000,
-      "spriteSize": 8,
-      "topology": "TORUS",  # Choose from ["BOUNDED", "TORUS"],
-      "simulation": {
-          "map": ascii_map_string,
-          "gameObjects": game_objects,
-          "scene": create_scene(),
-          "prefabs": PREFABS,
-          "charPrefabMap": CHAR_PREFAB_MAP,
-          "playerPalettes": [PLAYER_COLOR_PALETTES[0]] * NUM_PLAYERS,
-      },
-  }
-  return settings
+    game_objects = create_avatar_and_associated_objects(NUM_PLAYERS)
+    settings = {
+        "levelName": "allelopathic_harvest",
+        "levelDirectory": "meltingpot/lua/levels",
+        "numPlayers": num_players,
+        "episodeLengthFrames": 2000,
+        "spriteSize": 8,
+        "topology": "TORUS",  # Choose from ["BOUNDED", "TORUS"],
+        "simulation": {
+            "map": ascii_map_string,
+            "gameObjects": game_objects,
+            "scene": create_scene(),
+            "prefabs": PREFABS,
+            "charPrefabMap": CHAR_PREFAB_MAP,
+            "playerPalettes": [PLAYER_COLOR_PALETTES[0]] * NUM_PLAYERS,
+        },
+    }
+    return settings
 
 
 def get_config(factory=create_lab2d_settings):
-  """Default configuration for training on the allelopathic harvest level."""
-  config = config_dict.ConfigDict()
+    """Default configuration for training on the allelopathic harvest level."""
+    config = config_dict.ConfigDict()
 
-  # Basic configuration.
-  config.num_players = NUM_PLAYERS
-  config.lab2d_settings = factory(DEFAULT_ASCII_MAP, config.num_players)
+    # Basic configuration.
+    config.num_players = NUM_PLAYERS
+    config.lab2d_settings = factory(DEFAULT_ASCII_MAP, config.num_players)
 
-  # Action set configuration.
-  config.action_set = ACTION_SET
-  # Observation format configuration.
-  config.individual_observation_names = [
-      "RGB",
-      "POSITION",
-      "ORIENTATION",
-      "READY_TO_SHOOT",
-      # Debug observations:
-      "COLOR_ID",
-      "MOST_TASTY_BERRY_ID",
-      "AVATAR_IDS_IN_VIEW",
-      "AVATAR_IDS_IN_RANGE_TO_ZAP",
-  ]
-  config.global_observation_names = [
-      "WORLD.RGB",
-      "WORLD.PLAYER_TIMEOUT_COUNT",
-      "WORLD.RIPE_BERRIES_BY_TYPE",
-      "WORLD.UNRIPE_BERRIES_BY_TYPE",
-      "WORLD.BERRIES_BY_TYPE",
-      "WORLD.COLOR_BY_COLOR_ZAP_COUNTS",
-      "WORLD.COLOR_BY_TASTE_ZAP_COUNTS",
-      "WORLD.TASTE_BY_COLOR_ZAP_COUNTS",
-      "WORLD.TASTE_BY_TASTE_ZAP_COUNTS",
-      "WORLD.COLORING_BY_PLAYER",
-      "WORLD.EATING_TYPES_BY_PLAYER",
-      "WORLD.BERRIES_PER_TYPE_BY_COLOR_OF_COLORER",
-      "WORLD.BERRIES_PER_TYPE_BY_TASTE_OF_COLORER",
-      "WORLD.WHO_ZAPPED_WHO",
-  ]
+    # Action set configuration.
+    config.action_set = ACTION_SET
+    # Observation format configuration.
+    config.individual_observation_names = [
+        "RGB",
+        "POSITION",
+        "ORIENTATION",
+        "READY_TO_SHOOT",
+        # Debug observations:
+        "COLOR_ID",
+        "MOST_TASTY_BERRY_ID",
+        "AVATAR_IDS_IN_VIEW",
+        "AVATAR_IDS_IN_RANGE_TO_ZAP",
+    ]
+    config.global_observation_names = [
+        "WORLD.RGB",
+        "WORLD.PLAYER_TIMEOUT_COUNT",
+        "WORLD.RIPE_BERRIES_BY_TYPE",
+        "WORLD.UNRIPE_BERRIES_BY_TYPE",
+        "WORLD.BERRIES_BY_TYPE",
+        "WORLD.COLOR_BY_COLOR_ZAP_COUNTS",
+        "WORLD.COLOR_BY_TASTE_ZAP_COUNTS",
+        "WORLD.TASTE_BY_COLOR_ZAP_COUNTS",
+        "WORLD.TASTE_BY_TASTE_ZAP_COUNTS",
+        "WORLD.COLORING_BY_PLAYER",
+        "WORLD.EATING_TYPES_BY_PLAYER",
+        "WORLD.BERRIES_PER_TYPE_BY_COLOR_OF_COLORER",
+        "WORLD.BERRIES_PER_TYPE_BY_TASTE_OF_COLORER",
+        "WORLD.WHO_ZAPPED_WHO",
+    ]
 
-  return config
+    return config

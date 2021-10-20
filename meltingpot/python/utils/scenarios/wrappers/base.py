@@ -19,14 +19,14 @@ Substrate = substrate.Substrate
 
 
 class Wrapper(substrate.Substrate):
-  """Base class for Substrate wrappers."""
+    """Base class for Substrate wrappers."""
 
-  def __init__(self, env: substrate.Substrate):
-    """Initializer.
+    def __init__(self, env: substrate.Substrate):
+        """Initializer.
 
     Args:
       env: An environment to wrap. This environment will be closed with this
         wrapper.
     """
-    # pylint: disable=useless-super-delegation
-    super().__init__(env)
+        # pylint: disable=useless-super-delegation
+        super().__init__(env)

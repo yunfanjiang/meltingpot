@@ -186,8 +186,12 @@ xxxxxxx&xoxxxxxx
 xxxxx@*@**xxxxxx
 """
 
-HD_AVATAR_W_BADGE = [HD_AVATAR_N_W_BADGE, HD_AVATAR_E_W_BADGE,
-                     HD_AVATAR_S_W_BADGE, HD_AVATAR_W_W_BADGE]
+HD_AVATAR_W_BADGE = [
+    HD_AVATAR_N_W_BADGE,
+    HD_AVATAR_E_W_BADGE,
+    HD_AVATAR_S_W_BADGE,
+    HD_AVATAR_W_W_BADGE,
+]
 
 CUTE_AVATAR_N = """
 xxxxxxxx
@@ -357,8 +361,12 @@ xxabcdxx
 xx&x&&xx
 """
 
-CUTE_AVATAR_W_SHORTS = [CUTE_AVATAR_W_SHORTS_N, CUTE_AVATAR_W_SHORTS_E,
-                        CUTE_AVATAR_W_SHORTS_S, CUTE_AVATAR_W_SHORTS_W]
+CUTE_AVATAR_W_SHORTS = [
+    CUTE_AVATAR_W_SHORTS_N,
+    CUTE_AVATAR_W_SHORTS_E,
+    CUTE_AVATAR_W_SHORTS_S,
+    CUTE_AVATAR_W_SHORTS_W,
+]
 
 PERSISTENCE_PREDATOR_N = """
 xxexxexx
@@ -404,8 +412,12 @@ auuuuuax
 xexxxexx
 """
 
-PERSISTENCE_PREDATOR = [PERSISTENCE_PREDATOR_N, PERSISTENCE_PREDATOR_E,
-                        PERSISTENCE_PREDATOR_S, PERSISTENCE_PREDATOR_W]
+PERSISTENCE_PREDATOR = [
+    PERSISTENCE_PREDATOR_N,
+    PERSISTENCE_PREDATOR_E,
+    PERSISTENCE_PREDATOR_S,
+    PERSISTENCE_PREDATOR_W,
+]
 
 AVATAR_DEFAULT = """
 xxxx@@@@@@@@xxxx
@@ -1470,8 +1482,7 @@ x~~xx~~x
 """
 
 SPACER = [SPACER_N, SPACER_E, SPACER_S, SPACER_W]
-SPACER_TAGGED = [SPACER_TAGGED_S, SPACER_TAGGED_S, SPACER_TAGGED_S,
-                 SPACER_TAGGED_S]
+SPACER_TAGGED = [SPACER_TAGGED_S, SPACER_TAGGED_S, SPACER_TAGGED_S, SPACER_TAGGED_S]
 
 NW_SHIP_WALL = """
 oooooooo
@@ -1864,7 +1875,7 @@ GEM_PALETTE = {
     "r": (106, 241, 225, 255),
     "t": (61, 206, 189, 255),
     "d": (78, 218, 202, 255),
-    "x": ALPHA
+    "x": ALPHA,
 }
 
 GRATE_PALETTE = {
@@ -1874,49 +1885,46 @@ GRATE_PALETTE = {
     "~": (31, 31, 31, 255),
     "X": (104, 91, 91, 255),
     "o": (109, 98, 98, 255),
-    "x": ALPHA
+    "x": ALPHA,
 }
 
 GRASS_PALETTE = {
     "*": (124, 153, 115, 255),
     "@": (136, 168, 126, 255),
-    "x": (204, 199, 192, 255)
+    "x": (204, 199, 192, 255),
 }
 
 GLASS_PALETTE = {
     "@": (218, 243, 245, 150),
     "*": (186, 241, 245, 150),
     "!": (134, 211, 217, 150),
-    "x": ALPHA
+    "x": ALPHA,
 }
 
-WOOD_FLOOR_PALETTE = {
-    "-": (130, 100, 70, 255),
-    "x": (148, 109, 77, 255)
-}
+WOOD_FLOOR_PALETTE = {"-": (130, 100, 70, 255), "x": (148, 109, 77, 255)}
 
 METAL_FLOOR_PALETTE = {
     "o": (90, 92, 102, 255),
     "O": (117, 120, 133, 255),
-    "x": (99, 101, 112, 255)
+    "x": (99, 101, 112, 255),
 }
 
 METAL_PANEL_FLOOR_PALETTE = {
     "-": (142, 149, 163, 255),
     "#": (144, 152, 166, 255),
-    "/": (151, 159, 173, 255)
+    "/": (151, 159, 173, 255),
 }
 
 SHIP_PALETTE = {
     "o": (90, 105, 136, 255),
     "#": (58, 68, 102, 255),
-    "x": (38, 43, 68, 255)
+    "x": (38, 43, 68, 255),
 }
 
 TILE_FLOOR_PALETTE = {
     "t": (235, 228, 216, 255),
     "x": (222, 215, 202, 255),
-    "o": (214, 207, 195, 255)
+    "o": (214, 207, 195, 255),
 }
 
 ROCK_PALETTE = {
@@ -1941,7 +1949,7 @@ MOULD_PALETTE = {
     "*": (132, 222, 0, 255),
     "&": (119, 194, 0, 255),
     "+": (153, 219, 0, 80),
-    "x": ALPHA
+    "x": ALPHA,
 }
 
 SCISSORS_PALETTE = {
@@ -1973,7 +1981,7 @@ GRAY_PALETTE = {
     "&": (130, 130, 130, 255),
     "@": (200, 200, 200, 255),
     "#": (230, 230, 230, 255),
-    "x": ALPHA
+    "x": ALPHA,
 }
 
 WALL_PALETTE = {
@@ -1981,7 +1989,7 @@ WALL_PALETTE = {
     "&": (100, 100, 100, 255),
     "@": (109, 109, 109, 255),
     "#": (152, 152, 152, 255),
-    "x": ALPHA
+    "x": ALPHA,
 }
 
 BRICK_WALL_PALETTE = {
@@ -1989,7 +1997,7 @@ BRICK_WALL_PALETTE = {
     "c": (110, 108, 92, 255),
     "o": (78, 78, 78, 255),
     "i": (138, 135, 116, 255),
-    "x": ALPHA
+    "x": ALPHA,
 }
 
 COIN_PALETTE = {
@@ -1997,7 +2005,7 @@ COIN_PALETTE = {
     "@": (220, 220, 60, 255),
     "&": (180, 180, 40, 255),
     "#": (255, 255, 240, 255),
-    "x": ALPHA
+    "x": ALPHA,
 }
 
 RED_COIN_PALETTE = {
@@ -2005,7 +2013,7 @@ RED_COIN_PALETTE = {
     "@": (220, 60, 60, 255),
     "&": (180, 40, 40, 255),
     "#": (255, 240, 240, 255),
-    "x": ALPHA
+    "x": ALPHA,
 }
 
 GREEN_COIN_PALETTE = {
@@ -2013,51 +2021,28 @@ GREEN_COIN_PALETTE = {
     "@": (60, 220, 60, 255),
     "&": (40, 180, 40, 255),
     "#": (240, 255, 240, 255),
-    "x": ALPHA
+    "x": ALPHA,
 }
 
 TILED_FLOOR_GREY_PALETTE = {
     "o": (204, 199, 192, 255),
     "-": (194, 189, 182, 255),
-    "x": ALPHA
+    "x": ALPHA,
 }
 
-INVISIBLE_PALETTE = {
-    "*": ALPHA,
-    "@": ALPHA,
-    "&": ALPHA,
-    "#": ALPHA,
-    "x": ALPHA
-}
+INVISIBLE_PALETTE = {"*": ALPHA, "@": ALPHA, "&": ALPHA, "#": ALPHA, "x": ALPHA}
 
 
-TREE_PALETTE = {
-    "*": TREE_BROWN,
-    "@": LEAF_GREEN,
-    "x": ALPHA
-}
+TREE_PALETTE = {"*": TREE_BROWN, "@": LEAF_GREEN, "x": ALPHA}
 
 
-POTATO_PATCH_PALETTE = {
-    "*": VEGETAL_GREEN,
-    "@": LEAF_GREEN,
-    "x": ALPHA
-}
+POTATO_PATCH_PALETTE = {"*": VEGETAL_GREEN, "@": LEAF_GREEN, "x": ALPHA}
 
 
-FIRE_PALETTE = {
-    "@": TREE_BROWN,
-    "*": DARK_FLAME,
-    "&": LIGHT_FLAME,
-    "x": ALPHA
-}
+FIRE_PALETTE = {"@": TREE_BROWN, "*": DARK_FLAME, "&": LIGHT_FLAME, "x": ALPHA}
 
 
-STONE_QUARRY_PALETTE = {
-    "@": DARK_STONE,
-    "#": LIGHT_STONE,
-    "x": ALPHA
-}
+STONE_QUARRY_PALETTE = {"@": DARK_STONE, "#": LIGHT_STONE, "x": ALPHA}
 
 
 PRED1_PALETTE = {
@@ -2068,17 +2053,18 @@ PRED1_PALETTE = {
     "u": (113, 117, 153, 255),
     "a": (108, 111, 145, 255),
     "y": (255, 227, 71, 255),
-    "x": ALPHA
+    "x": ALPHA,
 }
 
 
 def rgb_to_rgba(rgb: ColorRGB, alpha: int = 255) -> ColorRGBA:
-  return (rgb[0], rgb[1], rgb[2], alpha)
+    return (rgb[0], rgb[1], rgb[2], alpha)
 
 
-def scale_color(color_tuple: ColorRGBA, factor: float,
-                alpha: Optional[int] = None) -> ColorRGBA:
-  """Scale an RGBA color tuple by a given factor.
+def scale_color(
+    color_tuple: ColorRGBA, factor: float, alpha: Optional[int] = None
+) -> ColorRGBA:
+    """Scale an RGBA color tuple by a given factor.
 
   This function scales, multiplicatively, the RGB values of a color tuple by the
   given amount, clamped to a maximum of 255. The alpha channel is either
@@ -2094,16 +2080,16 @@ def scale_color(color_tuple: ColorRGBA, factor: float,
   Returns:
     A new color tuple, with its RGB channels scaled.
   """
-  if len(color_tuple) == 3:
-    color_tuple = rgb_to_rgba(color_tuple)  # pytype: disable=wrong-arg-types
-  scaled = [int(min(x * factor, 255)) for x in color_tuple]
-  scaled[3] = alpha if alpha is not None else color_tuple[-1]
-  return tuple(scaled)
+    if len(color_tuple) == 3:
+        color_tuple = rgb_to_rgba(color_tuple)  # pytype: disable=wrong-arg-types
+    scaled = [int(min(x * factor, 255)) for x in color_tuple]
+    scaled[3] = alpha if alpha is not None else color_tuple[-1]
+    return tuple(scaled)
 
 
 # LINT.IfChange
 def get_palette(color: Color) -> Dict[str, ColorRGBA]:
-  """Convert provided color to a palette suitable for the player text shape.
+    """Convert provided color to a palette suitable for the player text shape.
 
   The overall palette is:
 
@@ -2124,35 +2110,36 @@ def get_palette(color: Color) -> Dict[str, ColorRGBA]:
   Returns:
     palette (dict): maps palette symbols to suitable colors.
   """
-  palette = {
-      "*": (color[0], color[1], color[2], 255),
-      "&": scale_color(color, 0.75, 255),
-      "o": scale_color(color, 0.55, 255),
-      "!": scale_color(color, 0.65, 255),
-      "~": scale_color(color, 0.9, 255),
-      "@": scale_color(color, 1.25, 255),
-      "r": (color[0], color[2], color[1], 255),
-      "R": scale_color((color[0], color[2], color[1], 255),
-                       1.25, 255),
-      "%": (178, 206, 234, 255),
-      "#": WHITE,
-      "O": DARK_GRAY,
-      ",": BLACK,
-      "x": ALPHA,
-  }
-  return palette
+    palette = {
+        "*": (color[0], color[1], color[2], 255),
+        "&": scale_color(color, 0.75, 255),
+        "o": scale_color(color, 0.55, 255),
+        "!": scale_color(color, 0.65, 255),
+        "~": scale_color(color, 0.9, 255),
+        "@": scale_color(color, 1.25, 255),
+        "r": (color[0], color[2], color[1], 255),
+        "R": scale_color((color[0], color[2], color[1], 255), 1.25, 255),
+        "%": (178, 206, 234, 255),
+        "#": WHITE,
+        "O": DARK_GRAY,
+        ",": BLACK,
+        "x": ALPHA,
+    }
+    return palette
+
+
 # LINT.ThenChange(//meltingpot/lua/modules/colors.lua)
 
 
 def flip_horizontal(sprite: str) -> str:
-  flipped = ""
-  for line in sprite.split("\n"):
-    flipped += line[::-1] + "\n"
-  return flipped[:-1]
+    flipped = ""
+    for line in sprite.split("\n"):
+        flipped += line[::-1] + "\n"
+    return flipped[:-1]
 
 
 def flip_vertical(sprite: str) -> str:
-  flipped = ""
-  for line in sprite[1:].split("\n"):
-    flipped = line + "\n" + flipped
-  return flipped
+    flipped = ""
+    for line in sprite[1:].split("\n"):
+        flipped = line + "\n" + flipped
+    return flipped

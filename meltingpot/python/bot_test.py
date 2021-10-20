@@ -27,72 +27,71 @@ from meltingpot.python.utils.scenarios.wrappers import default_observation_wrapp
 
 
 class _MultiToSinglePlayer(base.Wrapper):
-  """Adapter to convert a multiplayer environment to a single player version."""
+    """Adapter to convert a multiplayer environment to a single player version."""
 
-  def __init__(self, env) -> None:
-    """Initializes the environment.
+    def __init__(self, env) -> None:
+        """Initializes the environment.
 
     Args:
       env: multiplayer environment to make single player.
     """
-    super().__init__(env)
-    self._num_players = len(super().action_spec())
+        super().__init__(env)
+        self._num_players = len(super().action_spec())
 
-  def reset(self):
-    """See base class."""
-    timestep = super().reset()
-    return dm_env.TimeStep(
-        step_type=timestep.step_type,
-        reward=timestep.reward[0],
-        discount=timestep.discount,
-        observation=timestep.observation[0])
+    def reset(self):
+        """See base class."""
+        timestep = super().reset()
+        return dm_env.TimeStep(
+            step_type=timestep.step_type,
+            reward=timestep.reward[0],
+            discount=timestep.discount,
+            observation=timestep.observation[0],
+        )
 
-  def step(self, action):
-    """See base class."""
-    actions = [action] * self._num_players
-    timestep = super().step(actions)
-    return dm_env.TimeStep(
-        step_type=timestep.step_type,
-        reward=timestep.reward[0],
-        discount=timestep.discount,
-        observation=timestep.observation[0])
+    def step(self, action):
+        """See base class."""
+        actions = [action] * self._num_players
+        timestep = super().step(actions)
+        return dm_env.TimeStep(
+            step_type=timestep.step_type,
+            reward=timestep.reward[0],
+            discount=timestep.discount,
+            observation=timestep.observation[0],
+        )
 
-  def observation_spec(self):
-    """See base class."""
-    return super().observation_spec()[0]
+    def observation_spec(self):
+        """See base class."""
+        return super().observation_spec()[0]
 
-  def action_spec(self):
-    """See base class."""
-    return super().action_spec()[0]
+    def action_spec(self):
+        """See base class."""
+        return super().action_spec()[0]
 
 
 def build_environment(substrate):
-  config = substrate_factory.get_config(substrate)
-  env = substrate_factory.build(config)
-  env = all_observations_wrapper.Wrapper(
-      env,
-      observations_to_share=['POSITION'],
-      share_actions=True)
-  env = agent_slot_wrapper.Wrapper(env)
-  env = default_observation_wrapper.Wrapper(
-      env, key='INVENTORY', default_value=np.zeros([1]))
-  return _MultiToSinglePlayer(env)
+    config = substrate_factory.get_config(substrate)
+    env = substrate_factory.build(config)
+    env = all_observations_wrapper.Wrapper(
+        env, observations_to_share=["POSITION"], share_actions=True
+    )
+    env = agent_slot_wrapper.Wrapper(env)
+    env = default_observation_wrapper.Wrapper(
+        env, key="INVENTORY", default_value=np.zeros([1])
+    )
+    return _MultiToSinglePlayer(env)
 
 
 class BotTest(parameterized.TestCase):
-
-  @parameterized.named_parameters(
-      (bot, bot) for bot in bot_factory.AVAILABLE_BOTS
-  )
-  def test_step_without_error(self, bot_name):
-    bot_config = bot_factory.get_config(bot_name)
-    with bot_factory.build(bot_config) as policy:
-      prev_state = policy.initial_state()
-      with build_environment(bot_config.substrate) as env:
-        timestep = env.reset()
-        action, _ = policy.step(timestep, prev_state)
-        env.step(action)
+    @parameterized.named_parameters((bot, bot) for bot in bot_factory.AVAILABLE_BOTS)
+    def test_step_without_error(self, bot_name):
+        bot_config = bot_factory.get_config(bot_name)
+        with bot_factory.build(bot_config) as policy:
+            prev_state = policy.initial_state()
+            with build_environment(bot_config.substrate) as env:
+                timestep = env.reset()
+                action, _ = policy.step(timestep, prev_state)
+                env.step(action)
 
 
-if __name__ == '__main__':
-  absltest.main()
+if __name__ == "__main__":
+    absltest.main()

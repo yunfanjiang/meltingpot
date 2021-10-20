@@ -28,69 +28,56 @@ RGB_VALUE = np.ones((8, 8, 3), np.int8)
 
 
 class AgentSlotWrapperTest(absltest.TestCase):
+    def test_augment_timestep(self):
+        timestep = dm_env.restart([{"RGB": RGB_VALUE}] * 3)
+        actual = agent_slot_wrapper._augment_timestep(timestep)
+        expected = dm_env.restart(
+            [
+                {"RGB": RGB_VALUE, AGENT_SLOT: np.array([1, 0, 0], dtype=np.float32)},
+                {"RGB": RGB_VALUE, AGENT_SLOT: np.array([0, 1, 0], dtype=np.float32)},
+                {"RGB": RGB_VALUE, AGENT_SLOT: np.array([0, 0, 1], dtype=np.float32)},
+            ]
+        )
 
-  def test_augment_timestep(self):
-    timestep = dm_env.restart([{'RGB': RGB_VALUE}] * 3)
-    actual = agent_slot_wrapper._augment_timestep(timestep)
-    expected = dm_env.restart([
-        {
-            'RGB': RGB_VALUE,
-            AGENT_SLOT: np.array([1, 0, 0], dtype=np.float32)
-        },
-        {
-            'RGB': RGB_VALUE,
-            AGENT_SLOT: np.array([0, 1, 0], dtype=np.float32)
-        },
-        {
-            'RGB': RGB_VALUE,
-            AGENT_SLOT: np.array([0, 0, 1], dtype=np.float32)
-        },
-    ])
+        with self.subTest("not_inplace"):
+            self.assertIsNot(actual.observation, timestep.observation)
+        with self.subTest("not_inplace"):
+            np.testing.assert_equal(actual, expected)
 
-    with self.subTest('not_inplace'):
-      self.assertIsNot(actual.observation, timestep.observation)
-    with self.subTest('not_inplace'):
-      np.testing.assert_equal(actual, expected)
+    def test_added_slot(self):
+        env = mock.Mock(spec_set=base.Substrate)
+        env.observation_spec.return_value = [{"RGB": RGB_SPEC}] * 3
+        env.reset.return_value = dm_env.restart([{"RGB": RGB_VALUE}] * 3)
+        env.step.return_value = dm_env.transition(1, [{"RGB": RGB_VALUE}] * 3)
 
-  def test_added_slot(self):
-    env = mock.Mock(spec_set=base.Substrate)
-    env.observation_spec.return_value = [{'RGB': RGB_SPEC}] * 3
-    env.reset.return_value = dm_env.restart([{'RGB': RGB_VALUE}] * 3)
-    env.step.return_value = dm_env.transition(1, [{'RGB': RGB_VALUE}] * 3)
+        wrapped = agent_slot_wrapper.Wrapper(env)
 
-    wrapped = agent_slot_wrapper.Wrapper(env)
+        expected_spec = [
+            {
+                "RGB": RGB_SPEC,
+                AGENT_SLOT: dm_env.specs.Array(
+                    shape=[3], dtype=np.float32, name=AGENT_SLOT
+                ),
+            }
+        ] * 3
+        expected_observations = [
+            {"RGB": RGB_VALUE, AGENT_SLOT: np.array([1, 0, 0], dtype=np.float32)},
+            {"RGB": RGB_VALUE, AGENT_SLOT: np.array([0, 1, 0], dtype=np.float32)},
+            {"RGB": RGB_VALUE, AGENT_SLOT: np.array([0, 0, 1], dtype=np.float32)},
+        ]
 
-    expected_spec = [{
-        'RGB':
-            RGB_SPEC,
-        AGENT_SLOT:
-            dm_env.specs.Array(shape=[3], dtype=np.float32, name=AGENT_SLOT),
-    }] * 3
-    expected_observations = [
-        {
-            'RGB': RGB_VALUE,
-            AGENT_SLOT: np.array([1, 0, 0], dtype=np.float32)
-        },
-        {
-            'RGB': RGB_VALUE,
-            AGENT_SLOT: np.array([0, 1, 0], dtype=np.float32)
-        },
-        {
-            'RGB': RGB_VALUE,
-            AGENT_SLOT: np.array([0, 0, 1], dtype=np.float32)
-        },
-    ]
-
-    with self.subTest('observation_spec'):
-      self.assertEqual(wrapped.observation_spec(), expected_spec)
-    with self.subTest('reset'):
-      np.testing.assert_equal(wrapped.reset(),
-                              dm_env.restart(expected_observations))
-    with self.subTest('observation'):
-      np.testing.assert_equal(
-          wrapped.step(mock.sentinel.action),
-          dm_env.transition(1, expected_observations))
+        with self.subTest("observation_spec"):
+            self.assertEqual(wrapped.observation_spec(), expected_spec)
+        with self.subTest("reset"):
+            np.testing.assert_equal(
+                wrapped.reset(), dm_env.restart(expected_observations)
+            )
+        with self.subTest("observation"):
+            np.testing.assert_equal(
+                wrapped.step(mock.sentinel.action),
+                dm_env.transition(1, expected_observations),
+            )
 
 
-if __name__ == '__main__':
-  absltest.main()
+if __name__ == "__main__":
+    absltest.main()

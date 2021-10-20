@@ -18,36 +18,37 @@ import numpy as np
 
 from meltingpot.python.utils.scenarios.wrappers import base
 
-AGENT_SLOT = 'agent_slot'
+AGENT_SLOT = "agent_slot"
 
 
 def _augment_timestep(timestep: dm_env.TimeStep) -> dm_env.TimeStep:
-  """Returns a new timestep with player slot added as a one-hot."""
-  player_slots = np.eye(len(timestep.observation), dtype=np.float32)
-  observations = [
-      dict(observation, **{AGENT_SLOT: player_slots[n]})
-      for n, observation in enumerate(timestep.observation)
-  ]
-  return timestep._replace(observation=observations)
+    """Returns a new timestep with player slot added as a one-hot."""
+    player_slots = np.eye(len(timestep.observation), dtype=np.float32)
+    observations = [
+        dict(observation, **{AGENT_SLOT: player_slots[n]})
+        for n, observation in enumerate(timestep.observation)
+    ]
+    return timestep._replace(observation=observations)
 
 
 class Wrapper(base.Wrapper):
-  """Adds agent's player slot as a one-hot observation."""
+    """Adds agent's player slot as a one-hot observation."""
 
-  def reset(self):
-    """See base class."""
-    timestep = super().reset()
-    return _augment_timestep(timestep)
+    def reset(self):
+        """See base class."""
+        timestep = super().reset()
+        return _augment_timestep(timestep)
 
-  def step(self, actions):
-    """See base class."""
-    timestep = super().step(actions)
-    return _augment_timestep(timestep)
+    def step(self, actions):
+        """See base class."""
+        timestep = super().step(actions)
+        return _augment_timestep(timestep)
 
-  def observation_spec(self):
-    """See base class."""
-    observation_spec = super().observation_spec()
-    num_players = len(observation_spec)
-    slot_spec = dm_env.specs.Array(
-        shape=[num_players], dtype=np.float32, name=AGENT_SLOT)
-    return [dict(spec, **{AGENT_SLOT: slot_spec}) for spec in observation_spec]
+    def observation_spec(self):
+        """See base class."""
+        observation_spec = super().observation_spec()
+        num_players = len(observation_spec)
+        slot_spec = dm_env.specs.Array(
+            shape=[num_players], dtype=np.float32, name=AGENT_SLOT
+        )
+        return [dict(spec, **{AGENT_SLOT: slot_spec}) for spec in observation_spec]

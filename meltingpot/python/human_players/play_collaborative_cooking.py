@@ -22,51 +22,64 @@ Use `TAB` to switch between players.
 import argparse
 import json
 
-from meltingpot.python.configs.substrates import collaborative_cooking_impassable as mp_collaborative_cooking_impassable
-from meltingpot.python.configs.substrates import collaborative_cooking_passable as mp_collaborative_cooking_passable
+from meltingpot.python.configs.substrates import (
+    collaborative_cooking_impassable as mp_collaborative_cooking_impassable,
+)
+from meltingpot.python.configs.substrates import (
+    collaborative_cooking_passable as mp_collaborative_cooking_passable,
+)
 from meltingpot.python.human_players import level_playing_utils
 
 
 environment_configs = {
-    'mp_collaborative_cooking_impassable': mp_collaborative_cooking_impassable,
-    'mp_collaborative_cooking_passable': mp_collaborative_cooking_passable,
+    "mp_collaborative_cooking_impassable": mp_collaborative_cooking_impassable,
+    "mp_collaborative_cooking_passable": mp_collaborative_cooking_passable,
 }
 
 _ACTION_MAP = {
-    'move': level_playing_utils.get_direction_pressed,
-    'turn': level_playing_utils.get_turn_pressed,
-    'interact': level_playing_utils.get_space_key_pressed,
+    "move": level_playing_utils.get_direction_pressed,
+    "turn": level_playing_utils.get_turn_pressed,
+    "interact": level_playing_utils.get_space_key_pressed,
 }
 
 
 def verbose_fn(unused_env, unused_player_index):
-  pass
+    pass
 
 
 def main():
-  parser = argparse.ArgumentParser(description=__doc__)
-  parser.add_argument(
-      '--level_name', type=str, default='mp_collaborative_cooking_passable',
-      help='Level name to load')
-  parser.add_argument(
-      '--observation', type=str, default='RGB', help='Observation to render')
-  parser.add_argument(
-      '--settings', type=json.loads, default={}, help='Settings as JSON string')
-  # Activate verbose mode with --verbose=True.
-  parser.add_argument(
-      '--verbose', type=bool, default=False, help='Print debug information')
-  # Activate events printing mode with --print_events=True.
-  parser.add_argument(
-      '--print_events', type=bool, default=False, help='Print events')
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--level_name",
+        type=str,
+        default="mp_collaborative_cooking_passable",
+        help="Level name to load",
+    )
+    parser.add_argument(
+        "--observation", type=str, default="RGB", help="Observation to render"
+    )
+    parser.add_argument(
+        "--settings", type=json.loads, default={}, help="Settings as JSON string"
+    )
+    # Activate verbose mode with --verbose=True.
+    parser.add_argument(
+        "--verbose", type=bool, default=False, help="Print debug information"
+    )
+    # Activate events printing mode with --print_events=True.
+    parser.add_argument("--print_events", type=bool, default=False, help="Print events")
 
-  args = parser.parse_args()
-  env_config = environment_configs[args.level_name]
-  level_playing_utils.run_episode(
-      args.observation, args.settings, _ACTION_MAP,
-      env_config.get_config(), level_playing_utils.RenderType.PYGAME,
-      verbose_fn=verbose_fn if args.verbose else None,
-      print_events=args.print_events)
+    args = parser.parse_args()
+    env_config = environment_configs[args.level_name]
+    level_playing_utils.run_episode(
+        args.observation,
+        args.settings,
+        _ACTION_MAP,
+        env_config.get_config(),
+        level_playing_utils.RenderType.PYGAME,
+        verbose_fn=verbose_fn if args.verbose else None,
+        print_events=args.print_events,
+    )
 
 
-if __name__ == '__main__':
-  main()
+if __name__ == "__main__":
+    main()
