@@ -564,6 +564,7 @@ def get_config():
         "POSITION",
         "ORIENTATION",
         "INTERACTION_INVENTORIES",
+        "LAYER",
     ]
     config.global_observation_names = [
         "WORLD.RGB",

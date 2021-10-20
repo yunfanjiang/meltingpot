@@ -44,7 +44,9 @@ SCENARIOS_BY_SUBSTRATE: Mapping[
     str, Collection[str]
 ] = scenario_config.scenarios_by_substrate(scenario_config.SCENARIOS)
 
-PERMITTED_OBSERVATIONS = frozenset({"INVENTORY", "READY_TO_SHOOT", "RGB",})
+PERMITTED_OBSERVATIONS = frozenset(
+    {"INVENTORY", "READY_TO_SHOOT", "RGB", "WORLD.RGB", "LAYER"}
+)
 
 T = TypeVar("T")
 
