@@ -214,7 +214,7 @@ class Scenario(base.Wrapper):
         timestep = super().reset()
         agent_timestep, bot_timesteps = self._split_timestep(timestep)
         self._send_timesteps(bot_timesteps)
-        return agent_timestep
+        return agent_timestep, bot_timesteps
 
     def step(self, action: Sequence[int]) -> dm_env.TimeStep:
         """See base class."""
@@ -224,7 +224,7 @@ class Scenario(base.Wrapper):
         timestep = super().step(actions)
         agent_timestep, bot_timesteps = self._split_timestep(timestep)
         self._send_timesteps(bot_timesteps)
-        return agent_timestep
+        return agent_timestep, bot_timesteps
 
     def action_spec(self) -> Sequence[dm_env.specs.DiscreteArray]:
         """See base class."""
